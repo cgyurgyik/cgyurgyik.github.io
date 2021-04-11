@@ -80,14 +80,14 @@ analytics:
 
 # Site Author
 author:
-  name             : "Chris P Gyurgyik"
+  name             : "Chris Gyurgyik"
   avatar           : "profile.png"
   bio              : "4th year student and research assistant at Cornell University. Beginning in August 2021, SWE at Google."
   location         : "Ithaca, NY"
-  employer         :
+  employer         : "Google"
   pubmed           : 
   googlescholar    : 
-  email            :
+  email            : "cpg49 AT cornell DOT edu"
   researchgate     :  
   uri              :
   bitbucket        :
