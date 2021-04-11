@@ -1,6 +1,7 @@
 ---
 title: "Spherical Volume Rendering"
 excerpt: "Development of an algorithm to traverse a spherical voxel coordinate grid.<br/><img src='/images/svr/svr-front.png'>"
+date: 2020-09-01
 collection: portfolio
 ---
 
