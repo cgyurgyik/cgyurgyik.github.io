@@ -11,36 +11,39 @@ redirect_from:
 
 Education
 ======
-* B.S. in GitHub, GitHub University, 2012
-* M.S. in Jekyll, GitHub University, 2014
-* Ph.D in Version Control Theory, GitHub University, 2018 (expected)
+* B.A. Computer Science; Minor in Science Technology & Studies (STS), Cornell University, 2021 (expected)
 
 Work experience
 ======
-* Summer 2015: Research Assistant
-  * Github University
-  * Duties included: Tagging issues
-  * Supervisor: Professor Git
+* Summer 2021: SWE (expected)
+  * Google
+  * Duties included: N/A
 
-* Fall 2015: Research Assistant
-  * Github University
-  * Duties included: Merging pull requests
-  * Supervisor: Professor Hub
-  
-Skills
-======
-* Skill 1
-* Skill 2
-  * Sub-skill 2.1
-  * Sub-skill 2.2
-  * Sub-skill 2.3
-* Skill 3
+* Spring 2021: Research Assistant with [CUCAPRA](https://capra.cs.cornell.edu/).
+  * Cornell University
+  * Duties included: Development of a Number Theoretic Transform (NTT) pipeline generator for Calyx. Expansion of the fixed point library. Lowering a neural network (VGG Net) to Calyx through the TVM Relay frontend.
+  * Supervisor: Professor Adrian Sampson
 
-Publications
-======
-  <ul>{% for post in site.publications %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
+* Fall 2020: Research Assistant with [CUCAPRA](https://capra.cs.cornell.edu/).
+  * Cornell University
+  * Duties included: Continued development of a TVM Relay frontend for the Calyx language.
+  * Supervisor: Professor Adrian Sampson
+
+* Summer 2020: SWE Intern
+  * Google Ads
+  * Duties included: Improve the de-duplication stage of the crediting pipeline by migrating from two stores to one. It now uses a simpler synchronous callback format while still maintaining the necessary query-per-second rate.
+  * Supervisor: Insoo Choo
+
+* Summer 2019: Engineering Practicum
+  * Google Cloud
+  * Duties included: Optimize the core database implementation of Sawmill Logs, an exabyte scale data lake that supports internal Google analytics. Specifically, I experimented with Zstandard dictionary compression applied across the Google logs database, and compared it to current compression methods.
+  * Supervisor: Yixin Luo
+* Spring 2019: TA, CS2110 Object-Oriented Programming and Data Structures
+  * Cornell University
+  * Duties inclued: Facilitated weekly recitation for 40 students, held office hours to assist students in the course, proctored (and graded) examinations and assignments.
+* Fall 2018 - Spring 2019: Aerial Robotics at Cornell (ARC)
+  * Cornell University
+  * Duties included: Improving the proportional-integral-derivative (PID) controller for the quadcopter.
   
 Talks
 ======
@@ -56,4 +59,6 @@ Teaching
   
 Service and leadership
 ======
-* Currently signed in to 43 different slack teams
+* Member of the Cornell Undergraduate Veteran Association (CUVA). CUVA engages with faculty, staff, and non-veteran students to increase awareness of issues and challenges faced by undergraduate veterans attending Cornell University, both on-campus and off-campus.
+* Small unit leader in the Marine Corps. 
+* Co-captain of the 1st Battalion, 12th Marines shooting team at the Pacific Division Matches.
