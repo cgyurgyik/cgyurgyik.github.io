@@ -81,7 +81,7 @@ analytics:
 # Site Author
 author:
   name             : "Chris Gyurgyik"
-  avatar           : "images/personal_image.png"
+  avatar           : "personal_image.png"
   bio              : "4th year student and research assistant at Cornell University.
   location         : "Ithaca, NY"
   employer         : "Google"
