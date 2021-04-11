@@ -1,7 +1,7 @@
 ---
 title: "Eigenvectors from Eigenvalues"
 excerpt: "Based off a recent mathematical discovery, this implements the formula necessary to compute normed eigenvectors given only the eigenvalues of a Hermitian matrix.<br/><img src='/images/eigenvalues-from-eigenvectors/graph.png'>"
-date: 2019-01-01
+date: 2019
 collection: portfolio
 ---
 
