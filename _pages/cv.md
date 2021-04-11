@@ -11,7 +11,7 @@ redirect_from:
 
 Education
 ======
-* B.A. Computer Science; Minor in Science Technology & Studies (STS), Cornell University, 2021 (expected)
+* B.A. Computer Science; Minor in Science and Technology Studies (STS), Cornell University, 2021 (expected)
 
 Work experience
 ======
