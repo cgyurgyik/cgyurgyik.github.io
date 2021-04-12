@@ -21,3 +21,5 @@ The [LLVM project](https://en.wikipedia.org/wiki/LLVM) is a fascinating and appl
 [Cython](https://cython.org/) is a language that attempts to simplify writing C extensions for Python.
 - [Addition of the <numeric> library](https://github.com/cython/cython/pull/3332)
 
+## RISC-V assembly
+- [here](https://github.com/cgyurgyik/riscv-assembly) is a few functions written using a subset of the RISC-V instruction set.
