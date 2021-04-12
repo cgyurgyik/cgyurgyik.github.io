@@ -1,9 +1,10 @@
 ---
-title: "LLVM Contributions"
-excerpt: "Contributions to LLVM, specifically in the libc and CIRCT projects.<br/><img src='/images/llvm/dragon.png'>"
-date: 2020-12-01
+title: "Open Source Contributions"
+excerpt: "I enjoy contributing to open source!"
+date: 2020-01-01
 collection: portfolio
 ---
+
 The [LLVM project](https://en.wikipedia.org/wiki/LLVM) is a fascinating and applicable undertaking that rests upon the shoulders of many brilliant engineers. Below, I've highlighted a few of my PRs, which barely scratch the surface!
 
 ## CIRCT
