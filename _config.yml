@@ -11,7 +11,7 @@ title                    : "Chris Gyurgyik"
 title_separator          : "-"
 name                     : &name "Chris Gyurgyik"
 description              : &description "Research assistant at Cornell University"
-url                      : https://www.chrispg.dev
+url                      : https://www.cgyurgyik.github.io
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "https://cgyurgyik/cgyurgyik.github.io"
 teaser                   :  # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
