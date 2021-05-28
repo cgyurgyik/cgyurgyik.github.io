@@ -7,7 +7,7 @@ redirect_from:
   - /resume
 ---
 
-Last updated: September 2020
+Last updated: May 2021
 
 <iframe src="/files/cv/cgyurgyik_cv.pdf" width="100%" height="500" frameborder="no" border="0" marginwidth="0" marginheight="0"></iframe>
 
