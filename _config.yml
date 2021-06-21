@@ -10,7 +10,7 @@ locale                   : "en-US"
 title                    : "Chris Gyurgyik"
 title_separator          : "-"
 name                     : &name "Chris Gyurgyik"
-description              : &description "Research assistant at Cornell University"
+description              : &description "Software Engineer at Google"
 url                      : https://cgyurgyik.github.io
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "https://cgyurgyik/cgyurgyik.github.io"
@@ -82,9 +82,9 @@ analytics:
 author:
   name             : "Chris Gyurgyik"
   avatar           : "personal/me.png"
-  bio              : "Software Engineer."
-  location         : "Mountain View, NY"
-  employer         : Google
+  bio              : "Software Engineer at Google"
+  location         : "Mountain View, CA"
+  employer         :
   pubmed           : 
   googlescholar    : 
   email            :
