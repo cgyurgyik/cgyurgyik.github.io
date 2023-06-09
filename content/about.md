@@ -2,7 +2,9 @@
 template = "index.html"
 +++
 
-Christophe Gyurgyik is a PhD candidate at Stanford University. His interests include languages (natural and programming), compilers, and hardware-software codesign. Previously, he worked on the [XLA][] (Accelerated Linear Algebra) compiler and the [TPU][] (Tensor Processing Unit). His initial research [Calyx][] focused on high-level programming models for designing hardware accelerators and [CIRCT][] examined improving hardware design tools with compilers. This was conducted in collaboration with Cornell University's [CAPRA][] under [Adrian Sampson][asampson] and [Rachit Nigam][rnigam].
+Christophe Gyurgyik is a PhD candidate at Stanford University. His interests include languages (programming and natural), compilers, and hardware-software codesign. 
+
+Previously, he worked on the [XLA][] (Accelerated Linear Algebra) compiler and the [TPU][] (Tensor Processing Unit). Prior to that, his research [Calyx][] focused on high-level programming models for designing hardware accelerators, which led to collaboration with [CIRCT][], an experimental compiler to improve hardware design tools. This was conducted in collaboration with Cornell University's [CAPRA][] under [Adrian Sampson][asampson] and [Rachit Nigam][rnigam].
 
 In his free time, Christophe enjoys speaking natural languages (French and Italian) and rock climbing. A recent memorable adventure was the [Tuolumne Triple Crown][triple-crown].
 
