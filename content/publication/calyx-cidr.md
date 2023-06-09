@@ -19,7 +19,7 @@ publication = "Conference on Architectural Support for Programming Languages and
 publication_short = "ASPLOS"
 
 award = "Distinguished Artifact Award"
-pdf = "https://griffinberlste.in/pdf/cidr.pdf"
+pdf = "/files/pubs/calyx-cidr.pdf"
 urls = [
   { name = "Website", url = "https://docs.calyxir.org/interpreter.html" },
   { name = "Code", url = "https://github.com/cucapra/calyx" }
