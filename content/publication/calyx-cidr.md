@@ -21,7 +21,7 @@ publication_short = "ASPLOS"
 award = "Distinguished Artifact Award"
 pdf = "/files/pubs/calyx-cidr.pdf"
 urls = [
-  { name = "Website", url = "https://docs.calyxir.org/interpreter.html" },
+  { name = "Website", url = "https://docs.calyxir.org/running-calyx/interpreter.html" },
   { name = "Code", url = "https://github.com/cucapra/calyx" }
 ]
 type="conf"
