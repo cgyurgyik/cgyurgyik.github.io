@@ -1,6 +1,10 @@
-+++ title = "So what is the Triton Language?" date = 2024-04-11 draft = true
++++ 
+title = "So what is the Triton Language?" 
+date = 2024-04-11 
+draft = true
 
-[extra] summary = "An outsider's perspective on the Triton language." +++
+[extra] summary = "An outsider's perspective on the Triton language." 
++++
 
 # Triton Language: A Thousand Foot Perspective
 
