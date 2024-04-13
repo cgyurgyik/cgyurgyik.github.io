@@ -11,19 +11,19 @@ summary = "An outsider's perspective on the Triton language."
 
 This is an introduction to Triton, a domain specific language (DSL) embedded in Python, intermediate representation, and compiler. Triton is designed to write efficient GPU code with little CUDA experience by letting the compiler handle the heavy lifting: memory management and instruction selection.
 
-## The GPU Programming Language △
+## The △ of GPU Programming Languages
 
 First, I define a GPU programming language as one that can, by means of compilation or interpretation, run on a GPU. Many programming languages and libraries exist today to write GPU programs. These range from functional languages that hide the entire GPU execution model, e.g., Futhark (REF), to bare-metal languages, e.g., CUDA (REF), that are just a stone's throw away from assembly. Presented below is
 the programming language triangle, but in this case for languages intended to lower to GPU:
 
-TODO: insert triangle picture here
+![triangle](<gpu-triangle.png>)
 
 Safety: Descend
-Productivity: Futhark, Numpy (don't need to think at all about GPU)
+Productivity: Futhark (don't need to think at all about GPU)
 Prod-Perf: CuPy -> Triton -> Numba
 Performance: CUDA, OpenCL, HIP
 
-Like any claim related to programming languages, this is highly subjective. Here, we define *productivity* as a function of the cognitive effort required to reason about the GPU programming model. Consider the example matrix multiply `C = A @ B` below, written in Futhark:
+(Like any assertion related to programming languages, this is highly subjective.) We define *productivity* as a function of the additional cognitive exertion required to reason about the GPU programming model. Consider the example matrix multiply `C = A @ B` below, written in Futhark:
 
 ```haskell
 -- (Written in Futhark v0.25.15)
@@ -38,7 +38,7 @@ def matmul [i][k][j] (A: [i][k]i32) (B: [k][j]i32) : [i][j]i32 =
 
 This programming model does not allude to threads, blocks, or memory - instead, the user relies entirely upon the compiler to ensure the code is efficient. 
 
-Conversely, Descend (REF) is a "safe-by-construction" imperative language. We define *safety* as a measurement of how much guarantee you have that your program is safe. Inspired by Rust, Descend guarantees legal CPU and GPU memory management at compile time by tracking Ownership and Lifetimes. Following the previous example, we write matrix multiply in Descend:
+Conversely, Descend (REF) is a "safe-by-construction" imperative language. We define *safety* as a measurement of how much guarantee you have that your program is safe. Inspired by Rust, Descend guarantees legal CPU and GPU memory management at compile time by tracking *Ownership* and *Lifetimes*. Following the previous example, we write matrix multiply in Descend:
 
 ```rust
 // (Descend does not have releases; written on 12 April 2024.)
@@ -80,7 +80,9 @@ fn matmul<BLOCK: nat, i: nat, j: nat, k: nat, r: prv>(
 }
 ```
 
-Lastly, a language like CUDA allows a performance engineer to squeeze out every drop of performance. We define *performance* as a metric of how much control a user has over the GPU. Writing a truly efficient program in CUDA is a non trivial task, as we shall present soon. Moreover, transforming an inefficient program to an efficient one, e.g., using shared memories, requires a substanial code rewrite. Consider a naive matrix multiply kernel written in CUDA versus one that uses shared memory:
+Lastly, a language like CUDA allows a performance engineer to squeeze out every drop of performance. Usually, the last leg of the pyramid is *performance*. However, these languages are all meant to be performant, and, for a selected number of benchmarks, they can match the industry/open source standard. Instead, we focus on *versatility* as a metric of how much control a user has over the GPU. In other words, a more versatile language can do everything a less versatile language can do, at the cost of verbosity and complexity. Moreover, a more versatile language will always be able to write at least as efficient programs as less versatile languages. 
+
+Writing a truly efficient program is a non trivial task. Furthermore, transforming an inefficient program to an efficient one, e.g., using shared memories, requires a substanial code rewrite. Consider a naive matrix multiply kernel written in CUDA versus one that uses shared memory:
 
 TODO: Side-by-side diff.
 
@@ -91,7 +93,7 @@ __global__ void matmul(const int *A, const int *B, int *C, int n) {
 
   int temporary = 0;
   for (int k = 0; k < n; k++) {
-    temporary += A[Ai * n + k] * B[k * n + Bj];
+    temporary += A[Ai * n + k] * B[Bj + n * k];
   }
   C[Ai * n + Bj] = temporary;
 }
@@ -124,27 +126,7 @@ To this end, Numba (REF) provides a similar interface to CUDA but written in Pyt
 ## What is Triton?
 Triton is an imperative language and compiler stack to simplify the arduous process of writing GPU kernels. Antithetical to the SIMT model, users write programs that load, compute upon, and store *blocks* of memory. These blocks are accessed via a pointer interface. Then, the compiler automatically handles optimizations such as multi-threading, using fast memory, tensor cores, etc. So, the user must handle the outermost level of tiling, via loads and stores to global memory, and then the compiler handles the rest. To begin, we'll compare a simple program `B = A + 1`, where `|A| = |B| = n`.
 
-
-TODO: draw picture of each programming model underneath
-TODO: side-by-side
-
-```py
-@triton.jit
-def add1_kernel(A, B, n, BLOCK):
-    pid = tl.program_id(axis=0)
-    offsets = pid * BLOCK + tl.arange(0, BLOCK)
-    a = tl.load(A + offsets, mask=offsets < n)
-    out = a + 1
-    tl.store(B + offsets, out, mask=offsets < n)
-
-
-@cuda.jit
-def add1_kernel(A, B, n, BLOCK):
-    tid = blockIdx.x * BLOCK + threadIdx.x
-    if tid < n:
-        out = A[tid] + 1
-        B[tid] = out
-```
+![side-by-side](<side-by-side-kernel.png>)
 
 The Triton kernel is working on a block of threads, whose position in a grid is indicated by the `program_id`. The offsets are a block of pointers that will be used to determine where in global memory we want to load. These are masked off to ensure we don't exceed the length of the array `n`.
 
@@ -164,11 +146,9 @@ By performing block-level data flow analysis, the Triton language can *automatic
 Additionally, Triton provides a few other important features. It has native auto-tuning support, 
 
 ### Weaknesses
-This is a performance *savant*'s worst nightmare: we ultimately become victim to a "black box" compiler that we can only hope will optimize our kernel. Worse yet, we don't really have a way out - there exist optimizations that aren't clearly accessible from the high-level abstraction of Triton.
+This is a performance *savant*'s worst nightmare: we ultimately become victim to a "black box" compiler that we can only hope will optimize our kernel. Worse yet, we don't really have a way out. In other words, there exist optimizations that aren't clearly accessible from the high-level abstraction of Triton. So, while Triton may be the right choice for quick iteration, it isn't necessarily the best choice to squeeze out every drop of performance. While I won't go into full detail on the other drawbacks of Triton, there is an interesting (yet slightly outdated (FOOTNOTE)) blog post by a senior engineer at NVIDIA (REF), who inspects the emitted code from the Triton compiler, and reverse engineers the PTX back to CUDA (with the assistance of LLMs, no less).
 
-There is an interesting (yet slightly outdated (FOOTNOTE)) blog post by a senior engineer at NVIDIA (REF), who inspects the emitted code from the Triton compiler.
-
-FOOTNOTE: Add footnote saying that readers should be aware this is from Triton 1.0. I have run a few of these on Triton 2.1.0, and found that they improved since, e.g., removal of unnecessary thread synchronizations in reduction.
+FOOTNOTE: Add footnote saying that readers should be aware this is from Triton 1.0. I have run a few of these on Triton 2.1.0, and found they have improved since, e.g., there is no longer unnecessary thread synchronizations in the reduction kernel.
 
 ## More complex example to motivate the need for Triton
 Triton provides a much simpler programming model that realizes the simplicity in most GPU programs: load data, perform operations on that data, store data.
