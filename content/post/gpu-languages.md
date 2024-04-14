@@ -144,7 +144,7 @@ Writing optimal GPU programs is hard. For a memory-bound kernel, one must consid
 - Memory hierarchy (global $\rightarrow$ shared $\rightarrow$ registers). Using a lower-latency memory is better, but requires synchronization and low-level instructions such as intra-warp shuffles.
 - Bank conflicts (in shared memory): data structure layout is important to avoid bank conflicts, e.g., Area of Structures (AoS) versus Structure of Arrays (SoA).
 
-For a compute-bound kernel such as matrix multiply or convolution, one must map instructions to Tensor Cores. This requires carefully choosing tile size, SM count, etc. Such optimizations are not always trivial; this can be illustrated by the number of NVIDIA Developer blog posts [1][cuda-atom], [2][cuda-shmem], [3][cuda-xpose], [4][cuda-warp], [5][cuda-tc].
+For a compute-bound kernel such as matrix multiply or convolution, one must map instructions to Tensor Cores. This requires carefully choosing tile size, SM count, etc. Such optimizations are not always trivial; this can be illustrated by the number of NVIDIA Developer blog posts [[1][cuda-atom], [2][cuda-shmem], [3][cuda-xpose], [4][cuda-warp], [5][cuda-tc]].
 
 By performing block-level data flow analysis, the Triton language can *automatically* unlock optimizations such as memory coalescing, thread swizzling, pre-fetching, vectorization, instruction selection (e.g. Tensor Core), shared memory allocation and synchronization, and more.
 
@@ -185,6 +185,8 @@ For a deeper dive into Triton, I recommend the [tutorial(s)][triton-tut].
 [cuda-atom]: https://developer.nvidia.com/blog/gpu-pro-tip-fast-histograms-using-shared-atomics-maxwell/
 [cuda-tc]: https://developer.nvidia.com/blog/programming-tensor-cores-cuda-9/
 
+
+[cupy]: http://learningsys.org/nips17/assets/papers/paper_16.pdf
 [descend]: https://arxiv.org/pdf/2305.03448.pdf
 [numba]: https://numba.pydata.org/numba-doc/latest/cuda/index.html
 [opencl]: https://www.khronos.org/opencl/
