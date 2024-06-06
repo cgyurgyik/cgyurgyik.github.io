@@ -66,79 +66,79 @@ Subjective categorization of GPU languages.
 </span></code></pre>
 <p>This programming language does not allude to threads, blocks, or memory - instead, the user relies entirely upon the compiler to ensure the code is efficient. </p>
 <p>Conversely, Descend is a “safe-by-construction” imperative language. Inspired by Rust, Descend guarantees legal CPU and GPU memory management at compile time by tracking <em>ownership</em> and <em>lifetimes</em>. Following the previous example, we write matrix multiply in Descend:</p>
-<pre data-linenos data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><table><tbody><tr><td>1</td><td><span style="color:#65737e;">// (Descend does not have releases; written on 12 April 2024.)
-</span></td></tr><tr><td>2</td><td><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">matmul</span><span>&lt;BLOCK: nat, i: nat, j: nat, k: nat, r: prv&gt;(
-</span></td></tr><tr><td>3</td><td><span>    </span><span style="color:#bf616a;">A</span><span>: &amp;r shrd gpu.global [</span><span style="color:#b48ead;">i32</span><span>; i*k],
-</span></td></tr><tr><td>4</td><td><span>    </span><span style="color:#bf616a;">B</span><span>: &amp;r shrd gpu.global [</span><span style="color:#b48ead;">i32</span><span>; k*j],
-</span></td></tr><tr><td>5</td><td><span>    </span><span style="color:#bf616a;">C</span><span>: &amp;r uniq gpu.global [</span><span style="color:#b48ead;">i32</span><span>; i*j]
-</span></td></tr><tr><td>6</td><td><span>) -[grid: gpu.grid&lt;XY&lt;j</span><span style="background-color:#bf616a;color:#2b303b;">/</span><span>BLOCK, i</span><span style="background-color:#bf616a;color:#2b303b;">/</span><span style="color:#d08770;">BLOCK</span><span>&gt;, XY&lt;BLOCK, BLOCK&gt;&gt;] -&gt; () {
-</span></td></tr><tr><td>7</td><td><span>    </span><span style="color:#96b5b4;">sched</span><span>(Y) block_row in grid {
-</span></td></tr><tr><td>8</td><td><span>        </span><span style="color:#96b5b4;">sched</span><span>(X) block in block_row {
-</span></td></tr><tr><td>9</td><td><span>            </span><span style="color:#96b5b4;">sched</span><span>(Y) thread_row in block {
-</span></td></tr><tr><td>10</td><td><span>                </span><span style="color:#96b5b4;">sched</span><span>(X) thread in thread_row {
-</span></td></tr><tr><td>11</td><td><span>                    </span><span style="color:#b48ead;">let</span><span> Ai = &amp;shrd (*A)
-</span></td></tr><tr><td>12</td><td><span>                        .to_view
-</span></td></tr><tr><td>13</td><td><span>                        .grp::&lt;k&gt;
-</span></td></tr><tr><td>14</td><td><span>                        .grp::&lt;BLOCK&gt;[[block_row]][[thread_row]];
-</span></td></tr><tr><td>15</td><td><span>                    </span><span style="color:#b48ead;">let</span><span> Bj = &amp;shrd (*B)
-</span></td></tr><tr><td>16</td><td><span>                        .to_view
-</span></td></tr><tr><td>17</td><td><span>                        .grp::&lt;j&gt;
-</span></td></tr><tr><td>18</td><td><span>                        .transp
-</span></td></tr><tr><td>19</td><td><span>                        .grp::&lt;BLOCK&gt;[[block]][[thread]];
-</span></td></tr><tr><td>20</td><td><span>                    </span><span style="color:#b48ead;">let mut</span><span> Cij = &amp;uniq (*C)
-</span></td></tr><tr><td>21</td><td><span>                        .to_view
-</span></td></tr><tr><td>22</td><td><span>                        .grp::&lt;j&gt;
-</span></td></tr><tr><td>23</td><td><span>                        .grp::&lt;BLOCK&gt;[[block_row]]
-</span></td></tr><tr><td>24</td><td><span>                        .transp
-</span></td></tr><tr><td>25</td><td><span>                        .grp::&lt;BLOCK&gt;[[block]]
-</span></td></tr><tr><td>26</td><td><span>                        .transp[[thread_row]][[thread]];
-</span></td></tr><tr><td>27</td><td><span>                    
-</span></td></tr><tr><td>28</td><td><span>                    </span><span style="color:#b48ead;">let mut</span><span> sum = </span><span style="color:#d08770;">0</span><span>;
-</span></td></tr><tr><td>29</td><td><span>                    </span><span style="color:#b48ead;">for</span><span> e in </span><span style="color:#d08770;">0</span><span>..k { 
-</span></td></tr><tr><td>30</td><td><span>                      sum = sum + (*Ai)[e] * (*Bj)[e] 
-</span></td></tr><tr><td>31</td><td><span>                    };
-</span></td></tr><tr><td>32</td><td><span>                    *Cij = sum
-</span></td></tr><tr><td>33</td><td><span>                }
-</span></td></tr><tr><td>34</td><td><span>            }
-</span></td></tr><tr><td>35</td><td><span>        }
-</span></td></tr><tr><td>36</td><td><span>    }
-</span></td></tr><tr><td>37</td><td><span>}
-</span></td></tr></tbody></table></code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#c0c5ce;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#65737e;">// (Descend does not have releases; written on 12 April 2024.)
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">matmul</span><span>&lt;BLOCK: nat, i: nat, j: nat, k: nat, r: prv&gt;(
+</span><span>    </span><span style="color:#bf616a;">A</span><span>: &amp;r shrd gpu.global [</span><span style="color:#b48ead;">i32</span><span>; i*k],
+</span><span>    </span><span style="color:#bf616a;">B</span><span>: &amp;r shrd gpu.global [</span><span style="color:#b48ead;">i32</span><span>; k*j],
+</span><span>    </span><span style="color:#bf616a;">C</span><span>: &amp;r uniq gpu.global [</span><span style="color:#b48ead;">i32</span><span>; i*j]
+</span><span>) -[grid: gpu.grid&lt;XY&lt;j</span><span style="background-color:#bf616a;color:#2b303b;">/</span><span>BLOCK, i</span><span style="background-color:#bf616a;color:#2b303b;">/</span><span style="color:#d08770;">BLOCK</span><span>&gt;, XY&lt;BLOCK, BLOCK&gt;&gt;] -&gt; () {
+</span><span>    </span><span style="color:#96b5b4;">sched</span><span>(Y) block_row in grid {
+</span><span>        </span><span style="color:#96b5b4;">sched</span><span>(X) block in block_row {
+</span><span>            </span><span style="color:#96b5b4;">sched</span><span>(Y) thread_row in block {
+</span><span>                </span><span style="color:#96b5b4;">sched</span><span>(X) thread in thread_row {
+</span><span>                    </span><span style="color:#b48ead;">let</span><span> Ai = &amp;shrd (*A)
+</span><span>                        .to_view
+</span><span>                        .grp::&lt;k&gt;
+</span><span>                        .grp::&lt;BLOCK&gt;[[block_row]][[thread_row]];
+</span><span>                    </span><span style="color:#b48ead;">let</span><span> Bj = &amp;shrd (*B)
+</span><span>                        .to_view
+</span><span>                        .grp::&lt;j&gt;
+</span><span>                        .transp
+</span><span>                        .grp::&lt;BLOCK&gt;[[block]][[thread]];
+</span><span>                    </span><span style="color:#b48ead;">let mut</span><span> Cij = &amp;uniq (*C)
+</span><span>                        .to_view
+</span><span>                        .grp::&lt;j&gt;
+</span><span>                        .grp::&lt;BLOCK&gt;[[block_row]]
+</span><span>                        .transp
+</span><span>                        .grp::&lt;BLOCK&gt;[[block]]
+</span><span>                        .transp[[thread_row]][[thread]];
+</span><span>                    
+</span><span>                    </span><span style="color:#b48ead;">let mut</span><span> sum = </span><span style="color:#d08770;">0</span><span>;
+</span><span>                    </span><span style="color:#b48ead;">for</span><span> e in </span><span style="color:#d08770;">0</span><span>..k { 
+</span><span>                      sum = sum + (*Ai)[e] * (*Bj)[e] 
+</span><span>                    };
+</span><span>                    *Cij = sum
+</span><span>                }
+</span><span>            }
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span></code></pre>
 <p>Lastly, we write matrix multiplication in CUDA, which follows the Single Instruction Multiple Thread (SIMT) programming paradigm. This low-level language can easily be mapped to the generated PTX, which shows how versatile it really is. Consider the naive square matrix multiplication below, where each dimension has size <code>n</code>:</p>
-<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>__global__ void matmul(const int *A, const int *B, int *C, int n) {
-</span><span>  int Ai = blockIdx.y * blockDim.y + threadIdx.y;
-</span><span>  int Bj = blockIdx.x * blockDim.x + threadIdx.x;
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span>__global__ </span><span style="color:#b48ead;">void </span><span style="color:#8fa1b3;">matmul</span><span>(</span><span style="color:#b48ead;">const int </span><span>*</span><span style="color:#bf616a;">A</span><span>, </span><span style="color:#b48ead;">const int </span><span>*</span><span style="color:#bf616a;">B</span><span>, </span><span style="color:#b48ead;">int </span><span>*</span><span style="color:#bf616a;">C</span><span>, </span><span style="color:#b48ead;">int </span><span style="color:#bf616a;">n</span><span>) {
+</span><span>  </span><span style="color:#b48ead;">int</span><span> Ai = blockIdx.</span><span style="color:#bf616a;">y </span><span>* blockDim.</span><span style="color:#bf616a;">y </span><span>+ threadIdx.</span><span style="color:#bf616a;">y</span><span>;
+</span><span>  </span><span style="color:#b48ead;">int</span><span> Bj = blockIdx.</span><span style="color:#bf616a;">x </span><span>* blockDim.</span><span style="color:#bf616a;">x </span><span>+ threadIdx.</span><span style="color:#bf616a;">x</span><span>;
 </span><span>
-</span><span>  int temporary = 0;
-</span><span>  for (int k = 0; k &lt; n; k++) {
+</span><span>  </span><span style="color:#b48ead;">int</span><span> temporary = </span><span style="color:#d08770;">0</span><span>;
+</span><span>  </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#b48ead;">int</span><span> k = </span><span style="color:#d08770;">0</span><span>; k &lt; n; k++) {
 </span><span>    temporary += A[Ai * n + k] * B[Bj + n * k];
 </span><span>  }
 </span><span>  C[Ai * n + Bj] = temporary;
 </span><span>}
 </span></code></pre>
 <p>In the example above, each thread loads one row of A and one column of B from global memory, performs an inner product, and stores the result to C. This naive implementation is memory-bound, i.e., no matter how fast the additions and multiplies occur, we will always be waiting on data movement. We can mitigate the overhead of global memory by using a lower-latency memory: shared memory. Note that this will require significant changes to the structure of our code: we need to rewrite loop bounds, update indices, synchronize threads, etc. This is demonstrated in the example below:</p>
-<pre data-linenos data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><table><tbody><tr><td>1</td><td><span>__global__ </span><span style="color:#b48ead;">void </span><span style="color:#8fa1b3;">matmul</span><span>(</span><span style="color:#b48ead;">const int </span><span>*</span><span style="color:#bf616a;">A</span><span>, </span><span style="color:#b48ead;">const int </span><span>*</span><span style="color:#bf616a;">B</span><span>, </span><span style="color:#b48ead;">int </span><span>*</span><span style="color:#bf616a;">C</span><span>, </span><span style="color:#b48ead;">int </span><span style="color:#bf616a;">n</span><span>) {
-</span></td></tr><tr><td>2</td><td><span>  </span><span style="color:#b48ead;">int</span><span> Ai = blockIdx.</span><span style="color:#bf616a;">y </span><span>* blockDim.</span><span style="color:#bf616a;">y </span><span>+ threadIdx.</span><span style="color:#bf616a;">y</span><span>;
-</span></td></tr><tr><td>3</td><td><span>  </span><span style="color:#b48ead;">int</span><span> Bj = blockIdx.</span><span style="color:#bf616a;">x </span><span>* blockDim.</span><span style="color:#bf616a;">x </span><span>+ threadIdx.</span><span style="color:#bf616a;">x</span><span>;
-</span></td></tr><tr><td>4</td><td><span>
-</span></td></tr><tr><td>5</td><td><span>  __shared__ </span><span style="color:#b48ead;">int</span><span> shA[n];
-</span></td></tr><tr><td>6</td><td><span>  __shared__ </span><span style="color:#b48ead;">int</span><span> shB[n];
-</span></td></tr><tr><td>7</td><td><span>
-</span></td></tr><tr><td>8</td><td><span>  </span><span style="color:#b48ead;">int</span><span> temporary = </span><span style="color:#d08770;">0</span><span>;
-</span></td></tr><tr><td>9</td><td><span>  </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#b48ead;">int</span><span> i = </span><span style="color:#d08770;">0</span><span>; i &lt; n; i += blockDim.</span><span style="color:#bf616a;">x</span><span>) {
-</span></td></tr><tr><td>10</td><td><span>    shA[threadIdx.</span><span style="color:#bf616a;">y </span><span>* blockDim.</span><span style="color:#bf616a;">x </span><span>+ threadIdx.</span><span style="color:#bf616a;">x</span><span>] = A[Ai * n + i + threadIdx.</span><span style="color:#bf616a;">x    </span><span>];
-</span></td></tr><tr><td>11</td><td><span>    shB[threadIdx.</span><span style="color:#bf616a;">y </span><span>* blockDim.</span><span style="color:#bf616a;">x </span><span>+ threadIdx.</span><span style="color:#bf616a;">x</span><span>] = B[Bj + n * i + threadIdx.</span><span style="color:#bf616a;">y </span><span>* n];
-</span></td></tr><tr><td>12</td><td><span>
-</span></td></tr><tr><td>13</td><td><span>    </span><span style="color:#bf616a;">__syncthreads</span><span>();  </span><span style="color:#65737e;">// Wait until all threads finish loading to shared memory.
-</span></td></tr><tr><td>14</td><td><span>    </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#b48ead;">int</span><span> j = </span><span style="color:#d08770;">0</span><span>; j &lt; blockDim.</span><span style="color:#bf616a;">x</span><span>; j++) {
-</span></td></tr><tr><td>15</td><td><span>      temporary +=
-</span></td></tr><tr><td>16</td><td><span>        shA[threadIdx.</span><span style="color:#bf616a;">y </span><span>* blockDim.</span><span style="color:#bf616a;">x </span><span>+ j] * shB[j * blockDim.</span><span style="color:#bf616a;">x </span><span>+ threadIdx.</span><span style="color:#bf616a;">x</span><span>];
-</span></td></tr><tr><td>17</td><td><span>    }
-</span></td></tr><tr><td>18</td><td><span>    </span><span style="color:#bf616a;">__syncthreads</span><span>();  </span><span style="color:#65737e;">// Wait until all threads finish reading from shared memory.
-</span></td></tr><tr><td>19</td><td><span>  }
-</span></td></tr><tr><td>20</td><td><span>  C[Ai * n + Bj] = temporary;
-</span></td></tr><tr><td>21</td><td><span>}
-</span></td></tr></tbody></table></code></pre>
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span>__global__ </span><span style="color:#b48ead;">void </span><span style="color:#8fa1b3;">matmul</span><span>(</span><span style="color:#b48ead;">const int </span><span>*</span><span style="color:#bf616a;">A</span><span>, </span><span style="color:#b48ead;">const int </span><span>*</span><span style="color:#bf616a;">B</span><span>, </span><span style="color:#b48ead;">int </span><span>*</span><span style="color:#bf616a;">C</span><span>, </span><span style="color:#b48ead;">int </span><span style="color:#bf616a;">n</span><span>) {
+</span><span>  </span><span style="color:#b48ead;">int</span><span> Ai = blockIdx.</span><span style="color:#bf616a;">y </span><span>* blockDim.</span><span style="color:#bf616a;">y </span><span>+ threadIdx.</span><span style="color:#bf616a;">y</span><span>;
+</span><span>  </span><span style="color:#b48ead;">int</span><span> Bj = blockIdx.</span><span style="color:#bf616a;">x </span><span>* blockDim.</span><span style="color:#bf616a;">x </span><span>+ threadIdx.</span><span style="color:#bf616a;">x</span><span>;
+</span><span>
+</span><span>  __shared__ </span><span style="color:#b48ead;">int</span><span> shA[n];
+</span><span>  __shared__ </span><span style="color:#b48ead;">int</span><span> shB[n];
+</span><span>
+</span><span>  </span><span style="color:#b48ead;">int</span><span> temporary = </span><span style="color:#d08770;">0</span><span>;
+</span><span>  </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#b48ead;">int</span><span> i = </span><span style="color:#d08770;">0</span><span>; i &lt; n; i += blockDim.</span><span style="color:#bf616a;">x</span><span>) {
+</span><span>    shA[threadIdx.</span><span style="color:#bf616a;">y </span><span>* blockDim.</span><span style="color:#bf616a;">x </span><span>+ threadIdx.</span><span style="color:#bf616a;">x</span><span>] = A[Ai * n + i + threadIdx.</span><span style="color:#bf616a;">x    </span><span>];
+</span><span>    shB[threadIdx.</span><span style="color:#bf616a;">y </span><span>* blockDim.</span><span style="color:#bf616a;">x </span><span>+ threadIdx.</span><span style="color:#bf616a;">x</span><span>] = B[Bj + n * i + threadIdx.</span><span style="color:#bf616a;">y </span><span>* n];
+</span><span>
+</span><span>    </span><span style="color:#bf616a;">__syncthreads</span><span>();  </span><span style="color:#65737e;">// Wait until all threads finish loading to shared memory.
+</span><span>    </span><span style="color:#b48ead;">for </span><span>(</span><span style="color:#b48ead;">int</span><span> j = </span><span style="color:#d08770;">0</span><span>; j &lt; blockDim.</span><span style="color:#bf616a;">x</span><span>; j++) {
+</span><span>      temporary +=
+</span><span>        shA[threadIdx.</span><span style="color:#bf616a;">y </span><span>* blockDim.</span><span style="color:#bf616a;">x </span><span>+ j] * shB[j * blockDim.</span><span style="color:#bf616a;">x </span><span>+ threadIdx.</span><span style="color:#bf616a;">x</span><span>];
+</span><span>    }
+</span><span>    </span><span style="color:#bf616a;">__syncthreads</span><span>();  </span><span style="color:#65737e;">// Wait until all threads finish reading from shared memory.
+</span><span>  }
+</span><span>  C[Ai * n + Bj] = temporary;
+</span><span>}
+</span></code></pre>
 <p>This is just one of many optimizations to get a performant matrix multiplication kernel. We aren’t even considering multiple-level tiling, using Tensor Cores, etc. In some utopian setting, we wouldn’t <em>need</em> to, the compiler would do this automatically for us; in comes <a rel="noopener nofollow noreferrer" target="_blank" href="https://www.eecs.harvard.edu/~htk/publication/2019-mapl-tillet-kung-cox.pdf">Triton</a>.</p>
 <h2 id="what-is-triton">What is Triton?</h2>
 <p>Triton is an imperative language and compiler stack to simplify the arduous process of writing GPU kernels. Antithetical to the SIMT model, users write programs that load, compute upon, and store <em>blocks</em> of memory. These blocks are accessed via a pointer interface. Then, the compiler automatically handles optimizations such as multi-threading, using fast memory, tensor cores, etc. So, the user must handle the outermost level of tiling, via loads and stores to global memory, and then the compiler handles the rest. To begin, we’ll compare a simple program <code>B = A + 1</code>, where <code>|A| = |B| = n</code>.</p>
