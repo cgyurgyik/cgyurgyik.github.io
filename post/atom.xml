@@ -45,7 +45,7 @@ def matmul [i][k][j] (A: [i][k]i32) (B: [k][j]i32) : [i][j]i32 =
 &lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;This programming language does not allude to threads, blocks, or memory - instead, the user relies entirely upon the compiler to ensure the code is efficient. &lt;&#x2F;p&gt;
 &lt;p&gt;Conversely, Descend is a “safe-by-construction” imperative language. Inspired by Rust, Descend guarantees legal CPU and GPU memory management at compile time by tracking &lt;em&gt;ownership&lt;&#x2F;em&gt; and &lt;em&gt;lifetimes&lt;&#x2F;em&gt;. Following the previous example, we write matrix multiply in Descend:&lt;&#x2F;p&gt;
-&lt;pre data-lang=&quot;rust&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&amp;#x2F;&amp;#x2F; (Descend does not have releases; written on 12 April 2024.)
+&lt;pre&gt;&lt;code&gt;&amp;#x2F;&amp;#x2F; (Descend does not have releases; written on 12 April 2024.)
 fn matmul&amp;lt;BLOCK: nat, i: nat, j: nat, k: nat, r: prv&amp;gt;(
     A: &amp;amp;r shrd gpu.global [i32; i*k],
     B: &amp;amp;r shrd gpu.global [i32; k*j],
@@ -84,7 +84,7 @@ fn matmul&amp;lt;BLOCK: nat, i: nat, j: nat, k: nat, r: prv&amp;gt;(
 }
 &lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;Lastly, we write matrix multiplication in CUDA, which follows the Single Instruction Multiple Thread (SIMT) programming paradigm. This low-level language can easily be mapped to the generated PTX, which shows how versatile it really is. Consider the naive square matrix multiplication below, where each dimension has size &lt;code&gt;n&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
-&lt;pre data-lang=&quot;cpp&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;__global__ void matmul(const int *A, const int *B, int *C, int n) {
+&lt;pre&gt;&lt;code&gt;__global__ void matmul(const int *A, const int *B, int *C, int n) {
   int Ai = blockIdx.y * blockDim.y + threadIdx.y;
   int Bj = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -96,7 +96,7 @@ fn matmul&amp;lt;BLOCK: nat, i: nat, j: nat, k: nat, r: prv&amp;gt;(
 }
 &lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;In the example above, each thread loads one row of A and one column of B from global memory, performs an inner product, and stores the result to C. This naive implementation is memory-bound, i.e., no matter how fast the additions and multiplies occur, we will always be waiting on data movement. We can mitigate the overhead of global memory by using a lower-latency memory: shared memory. Note that this will require significant changes to the structure of our code: we need to rewrite loop bounds, update indices, synchronize threads, etc. This is demonstrated in the example below:&lt;&#x2F;p&gt;
-&lt;pre data-lang=&quot;cpp&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;__global__ void matmul(const int *A, const int *B, int *C, int n) {
+&lt;pre&gt;&lt;code&gt;__global__ void matmul(const int *A, const int *B, int *C, int n) {
   int Ai = blockIdx.y * blockDim.y + threadIdx.y;
   int Bj = blockIdx.x * blockDim.x + threadIdx.x;
 
