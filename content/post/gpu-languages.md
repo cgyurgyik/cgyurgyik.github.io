@@ -24,7 +24,7 @@ GPUs are specialists - they perform well for embarrassingly parallel problems. T
 
 We've now defined the three vertices of a GPU programming language triangle. We have a selection of languages spanning both industry and research, which are specific to GPU hardware: [Descend][descend], Triton, Futhark, CuPy, [Numba][numba], CUDA, [OpenCL][opencl], and [HIP][hip]. Consider the new triangle below:
 
-<img src= "/files/images/gpu-triangle.png" alt="gpu-triangle" style="border: 1px solid black;" with="110%">
+<img src= "/files/images/gpu-triangle.png" alt="gpu-triangle" style="border: 1px solid black;" with="120%">
 
 These placements assume someone is trying to write efficient GPU kernels, and we acknowledge they are entirely subjective. We'll spend the rest of this post providing examples of different languages, and finish with a slightly deeper dive into the Triton language.
 
