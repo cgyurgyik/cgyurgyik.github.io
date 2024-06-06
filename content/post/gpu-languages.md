@@ -155,10 +155,10 @@ Additionally, Triton provides a few other useful features, such as JIT compilati
 ### Weaknesses
 This is a performance *savant*'s worst nightmare: we ultimately become victim to a "black box" compiler that we can only hope will optimize our kernel. Worse yet, we don't really have a way out. In other words, there exist optimizations that aren't clearly accessible from the high-level abstraction of Triton. So, while Triton may be the right choice for quick iteration, it isn't necessarily the best choice to squeeze out every drop of performance, i.e., it makes an important trade-off between productivity and versatility.
 
-There is an alluring (yet slightly outdated{% footnote() %}
+There is an alluring (yet slightly outdated
+{% footnote() %}
 Readers should be aware this was written when Triton 1.0 was released. I have run a few of these example kernels on Triton 2.1.0, and found they have improved since then, e.g., there is no longer unnecessary thread synchronizations in the reduction kernel. However, the point is still relevant: the Triton compiler is opaque.
-{% end %}
-) [blog post][demystify] by a senior engineer at NVIDIA, who inspects the emitted code from the Triton compiler, and reverse engineers the PTX back to CUDA (with the assistance of LLMs, no less).
+{% end %}) [blog post][demystify] by a senior engineer at NVIDIA, who inspects the emitted code from the Triton compiler, and reverse engineers the PTX back to CUDA (with the assistance of LLMs, no less).
 
 For a deeper dive into Triton, I recommend the [tutorial(s)][triton-tut].
 
