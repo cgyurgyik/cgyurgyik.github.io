@@ -24,7 +24,7 @@ GPUs are specialists - they perform well for embarrassingly parallel problems. T
 
 We've now defined the three vertices of a GPU programming language triangle. We have a selection of languages spanning both industry and research, which are specific to GPU hardware: [Descend][descend], Triton, Futhark, CuPy, [Numba][numba], CUDA, [OpenCL][opencl], and [HIP][hip]. Consider the new triangle below:
 
-<kbd>![gpu-triangle](/files/images/gpu-triangle.png)</kbd>
+<img src= "/files/images/gpu-triangle.png" alt="gpu-triangle" style="border: 1px solid black;">
 
 These placements assume someone is trying to write efficient GPU kernels, and we acknowledge they are entirely subjective. We'll spend the rest of this post providing examples of different languages, and finish with a slightly deeper dive into the Triton language.
 
@@ -115,15 +115,20 @@ __global__ void matmul(const int *A, const int *B, int *C, int n) {
 
   int temporary = 0;
   for (int i = 0; i < n; i += blockDim.x) {
-    shA[threadIdx.y * blockDim.x + threadIdx.x] = A[Ai * n + i + threadIdx.x    ];
-    shB[threadIdx.y * blockDim.x + threadIdx.x] = B[Bj + n * i + threadIdx.y * n];
+    shA[threadIdx.y * blockDim.x + threadIdx.x] =
+          A[Ai * n + i + threadIdx.x    ];
+    shB[threadIdx.y * blockDim.x + threadIdx.x] =
+          B[Bj + n * i + threadIdx.y * n];
 
-    __syncthreads();  // Wait until all threads finish loading to shared memory.
+    // Wait until all threads finish loading to shared memory.
+    __syncthreads();  
     for (int j = 0; j < blockDim.x; j++) {
       temporary +=
-        shA[threadIdx.y * blockDim.x + j] * shB[j * blockDim.x + threadIdx.x];
+        shA[threadIdx.y * blockDim.x + j] * 
+        shB[j * blockDim.x + threadIdx.x];
     }
-    __syncthreads();  // Wait until all threads finish reading from shared memory.
+    // Wait until all threads finish reading from shared memory.
+    __syncthreads();  
   }
   C[Ai * n + Bj] = temporary;
 }
@@ -134,7 +139,7 @@ This is just one of many optimizations to get a performant matrix multiplication
 ## What is Triton?
 Triton is an imperative language and compiler stack to simplify the arduous process of writing GPU kernels. Antithetical to the SIMT model, users write programs that load, compute upon, and store *blocks* of memory. These blocks are accessed via a pointer interface. Then, the compiler automatically handles optimizations such as multi-threading, using fast memory, tensor cores, etc. So, the user must handle the outermost level of tiling, via loads and stores to global memory, and then the compiler handles the rest. To begin, we'll compare a simple program `B = A + 1`, where `|A| = |B| = n`.
 
-<kbd>![side-by-side](/files/images/side-by-side-kernel.png)</kbd>
+<img src= "/files/images/side-by-side-kernel.png" alt="side-by-side-kernel" style="border: 1px solid black;">
 
 The Triton kernel is working on a block of threads, whose position in a grid is indicated by the `program_id`. The offsets are a block of pointers that will be used to determine where in global memory we want to load. These are masked off to ensure we don't exceed the length of the array `n`.
 
