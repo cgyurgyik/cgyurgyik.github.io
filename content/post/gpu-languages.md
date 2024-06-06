@@ -47,7 +47,7 @@ This programming language does not allude to threads, blocks, or memory - instea
 
 Conversely, Descend is a "safe-by-construction" imperative language. Inspired by Rust, Descend guarantees legal CPU and GPU memory management at compile time by tracking *ownership* and *lifetimes*. Following the previous example, we write matrix multiply in Descend:
 
-```
+```rust,linenos
 // (Descend does not have releases; written on 12 April 2024.)
 fn matmul<BLOCK: nat, i: nat, j: nat, k: nat, r: prv>(
     A: &r shrd gpu.global [i32; i*k],
@@ -105,7 +105,7 @@ __global__ void matmul(const int *A, const int *B, int *C, int n) {
 
 In the example above, each thread loads one row of A and one column of B from global memory, performs an inner product, and stores the result to C. This naive implementation is memory-bound, i.e., no matter how fast the additions and multiplies occur, we will always be waiting on data movement. We can mitigate the overhead of global memory by using a lower-latency memory: shared memory. Note that this will require significant changes to the structure of our code: we need to rewrite loop bounds, update indices, synchronize threads, etc. This is demonstrated in the example below:
 
-```
+```cpp,linenos
 __global__ void matmul(const int *A, const int *B, int *C, int n) {
   int Ai = blockIdx.y * blockDim.y + threadIdx.y;
   int Bj = blockIdx.x * blockDim.x + threadIdx.x;
@@ -118,14 +118,12 @@ __global__ void matmul(const int *A, const int *B, int *C, int n) {
     shA[threadIdx.y * blockDim.x + threadIdx.x] = A[Ai * n + i + threadIdx.x    ];
     shB[threadIdx.y * blockDim.x + threadIdx.x] = B[Bj + n * i + threadIdx.y * n];
 
-    // Wait until all threads finish loading to shared memory.
-    __syncthreads(); 
+    __syncthreads();  // Wait until all threads finish loading to shared memory.
     for (int j = 0; j < blockDim.x; j++) {
       temporary +=
         shA[threadIdx.y * blockDim.x + j] * shB[j * blockDim.x + threadIdx.x];
     }
-    // Wait until all threads finish reading from shared memory.
-    __syncthreads();
+    __syncthreads();  // Wait until all threads finish reading from shared memory.
   }
   C[Ai * n + Bj] = temporary;
 }
