@@ -118,12 +118,14 @@ __global__ void matmul(const int *A, const int *B, int *C, int n) {
     shA[threadIdx.y * blockDim.x + threadIdx.x] = A[Ai * n + i + threadIdx.x    ];
     shB[threadIdx.y * blockDim.x + threadIdx.x] = B[Bj + n * i + threadIdx.y * n];
 
-    __syncthreads(); // Wait until all threads finish loading to shared memory.
+    // Wait until all threads finish loading to shared memory.
+    __syncthreads(); 
     for (int j = 0; j < blockDim.x; j++) {
       temporary +=
         shA[threadIdx.y * blockDim.x + j] * shB[j * blockDim.x + threadIdx.x];
     }
-    __syncthreads(); // Wait until all threads finish reading from shared memory.
+    // Wait until all threads finish reading from shared memory.
+    __syncthreads();
   }
   C[Ai * n + Bj] = temporary;
 }
