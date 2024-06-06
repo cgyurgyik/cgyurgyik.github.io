@@ -5,13 +5,15 @@ draft = false
 
 [extra] 
 summary = "Subjective categorization of GPU languages."
+cpu-triangle-image = "/static/files/images/cpu-triangle.png"
 +++
 
 Many programming languages exist today to run fast (and hopefully safe) programs on a GPU. These range from languages in the C family with directives to (mostly) functional languages that veil the low-level details of the hardware. A GPU excels at executing tasks that share a common principal: massive parallelelism. This includes scientific computing, graphics processing, and machine learning. 
 
 If the task cannot be parallelized sufficiently, then a CPU wins - it is the jack-of-all-trades of computer hardware. Many programming languages exist today to harness the potential of a CPU. Typically, these languages need to make trade-offs between three aspects: *safety*, *performance*, and *productivity*. This is depicted as a triangle, where the three aforementioned characterizations are placed at the vertices. Then, programming languages are placed somewhere along (or even in) the triangle to demonstrate what influenced their design.
 
-![cpu-triangle](/static/files/images/cpu-triangle.png)
+<p>
+<img src=" {{site.base_url}}/{{ page.extra.cpu-triangle-image }}" style="max-width:400px;" alt="CPU triangle"></p>
 
 We define *safety* as a measurement of how correct the program is, for some definiton of correct. This definition could be "memory accesses are always legal" or "this program is formally proven to be correct under some set of axioms." We use *performance* to quantify the amount of work accomplished by the program. Typically, as a language provides more and more abstractions to obfuscate the complexity of a CPU, it will emit less performant code. Contrary to what one might think, performance might not always be a primary concern. Running a program in 0.1 seconds versus 0.01 seconds is a magnitude of order difference, and yet likely unheeded for a student who wants to plot a graph. Lastly, *productivity* is a function of the additional cognitive exertion required to reason about a program and it's objective(s). Even putting aside the grandiose debate on syntax, this is likely the most subjective. For example, a CPU performance engineer might claim C as the most productive language because it can easily be mapped to the compiled machine code. On the other hand, a Machine Learning (ML) scientist would avow Python is their tool of choice given the wide array of ML frameworks available - a model can be written in 10 lines of code instead of 10,000! There is no ubiquity in the definition of *productivity*, and that's OK, so long as we characterize it before arguing one language is more productive than another.
 
