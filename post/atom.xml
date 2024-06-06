@@ -108,12 +108,14 @@ fn matmul&amp;lt;BLOCK: nat, i: nat, j: nat, k: nat, r: prv&amp;gt;(
     shA[threadIdx.y * blockDim.x + threadIdx.x] = A[Ai * n + i + threadIdx.x    ];
     shB[threadIdx.y * blockDim.x + threadIdx.x] = B[Bj + n * i + threadIdx.y * n];
 
-    __syncthreads(); &amp;#x2F;&amp;#x2F; Wait until all threads finish loading to shared memory.
+    &amp;#x2F;&amp;#x2F; Wait until all threads finish loading to shared memory.
+    __syncthreads(); 
     for (int j = 0; j &amp;lt; blockDim.x; j++) {
       temporary +=
         shA[threadIdx.y * blockDim.x + j] * shB[j * blockDim.x + threadIdx.x];
     }
-    __syncthreads(); &amp;#x2F;&amp;#x2F; Wait until all threads finish reading from shared memory.
+    &amp;#x2F;&amp;#x2F; Wait until all threads finish reading from shared memory.
+    __syncthreads();
   }
   C[Ai * n + Bj] = temporary;
 }
