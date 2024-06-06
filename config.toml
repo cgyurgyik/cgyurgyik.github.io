@@ -30,6 +30,6 @@ author = [
   { name = "Kunle Olukutun", link = "https://engineering.stanford.edu/people/oyekunle-olukotun" },
   { name = "Paul Mure", link = "https://people.csail.mit.edu/paulmure/" },
   { name = "Fred Kjolstad", link = "https://fredrikbk.com/" },
-  { name = "Alexander J. Root, link = "https://rootjalex.github.io/" }, 
+  { name = "Alexander J. Root", link = "https://rootjalex.github.io/" }, 
   { name = "Bobby Yan", link = "https://bobbyy.org/" },
 ]
