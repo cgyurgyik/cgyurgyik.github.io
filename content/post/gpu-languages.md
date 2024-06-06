@@ -163,7 +163,7 @@ Readers should be aware this was written when Triton 1.0 was released. I have ru
 For a deeper dive into Triton, I recommend the [tutorial(s)][triton-tut].
 
 ## Takeaways
-- GPU languages should always have performance as one of their north stars. If the user didn't want a fast program, then they could likely use a CPU.
+- GPU languages should always have performance as one of their north stars. If the user didn't want a fast program, then they could just use a CPU.
 - There will always be trade-offs between safety, productivity, and versatility. These should provide guidance in the design of your language. For example, Triton is designed for fast iteration on neural network kernels, where "everything is a matrix multiply," and fusion is an easy way to reduce memory bandwidth.
 - A compiler provides automatic optimization, but can quickly become a burden for the performance engineer. This is [highlighted][luajit] by Mike Pall in a thread about the LuaJIT compiler. This is also a driving force behind the [Exo Language][exo], which attempts to *externalize* the compiler so that the optimizations are transparent.
 
