@@ -12,7 +12,7 @@ Many programming languages exist today to run fast (and hopefully safe) programs
 
 If the task cannot be parallelized sufficiently, then a CPU wins - it is the jack-of-all-trades of computer hardware. Many programming languages exist today to harness the potential of a CPU. Typically, these languages need to make trade-offs between three aspects: *safety*, *performance*, and *productivity*. This is depicted as a triangle, where the three aforementioned characterizations are placed at the vertices. Then, programming languages are placed somewhere along (or even in) the triangle to demonstrate what influenced their design.
 
-<img src= "/files/images/cpu-triangle.png" alt="cpu-triangle" style="border: 2px solid black;" width="60%">
+<img src= "/files/images/cpu-triangle.png" alt="cpu-triangle" style="border: 2px solid black;" width="50%">
 
 We define *safety* as a measurement of how correct the program is, for some definiton of correct. This definition could be "memory accesses are always legal" or "this program is formally proven to be correct under some set of axioms." We use *performance* to quantify the amount of work accomplished by the program. Typically, as a language provides more and more abstractions to obfuscate the complexity of a CPU, it will emit less performant code. Contrary to what one might think, performance might not always be a primary concern. Running a program in 0.1 seconds versus 0.01 seconds is a magnitude of order difference, and yet likely unheeded for a student who wants to plot a graph. Lastly, *productivity* is a function of the additional cognitive exertion required to reason about a program and it's objective(s). Even putting aside the grandiose debate on syntax, this is likely the most subjective. For example, a CPU performance engineer might claim C as the most productive language because it can easily be mapped to the compiled machine code. On the other hand, a Machine Learning (ML) scientist would avow Python is their tool of choice given the wide array of ML frameworks available - a model can be written in 10 lines of code instead of 10,000! There is no ubiquity in the definition of *productivity*, and that's OK, so long as we characterize it before arguing one language is more productive than another.
 
@@ -24,7 +24,7 @@ GPUs are specialists - they perform well for embarrassingly parallel problems. T
 
 We've now defined the three vertices of a GPU programming language triangle. We have a selection of languages spanning both industry and research, which are specific to GPU hardware: [Descend][descend], Triton, Futhark, CuPy, [Numba][numba], CUDA, [OpenCL][opencl], and [HIP][hip]. Consider the new triangle below:
 
-<img src= "/files/images/gpu-triangle.png" alt="gpu-triangle" style="border: 1px solid black;">
+<img src= "/files/images/gpu-triangle.png" alt="gpu-triangle" style="border: 1px solid black;" with="110%">
 
 These placements assume someone is trying to write efficient GPU kernels, and we acknowledge they are entirely subjective. We'll spend the rest of this post providing examples of different languages, and finish with a slightly deeper dive into the Triton language.
 
