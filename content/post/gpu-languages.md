@@ -3,7 +3,8 @@ title = "(draft) The GPU Programming Language Triangle"
 date = 2024-04-11
 draft = false
 
-[extra] summary = "Subjective categorization of GPU languages"
+[extra] 
+summary = "Subjective categorization of GPU languages."
 +++
 
 Many programming languages exist today to run fast (and hopefully safe) programs on a GPU. These range from languages in the C family with directives to (mostly) functional languages that veil the low-level details of the hardware. A GPU excels at executing tasks that share a common principal: massive parallelelism. This includes scientific computing, graphics processing, and machine learning. 
