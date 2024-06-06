@@ -1,7 +1,7 @@
 +++
-title = "The GPU Programming Language Triangle"
+title = "(draft) The GPU Programming Language Triangle"
 date = 2024-04-11
-draft = true
+draft = false
 
 +++
 
