@@ -163,10 +163,6 @@ Subjective categorization of GPU languages.
 </span><span style="color:#65737e;">    Kernel for computing the matmul C = A @ B.
 </span><span style="color:#65737e;">    A has shape (M, K), B has shape (K, N) and C has shape (M, N)
 </span><span style="color:#65737e;">    &quot;&quot;&quot;
-</span><span>    </span><span style="color:#65737e;"># -----------------------------------------------------------
-</span><span>    </span><span style="color:#65737e;"># Map program ids `pid` to the block of C it should compute.
-</span><span>    </span><span style="color:#65737e;"># This is done in a grouped ordering to promote L2 data reuse.
-</span><span>    </span><span style="color:#65737e;"># See above `L2 Cache Optimizations` section for details.
 </span><span>    pid = tl.</span><span style="color:#bf616a;">program_id</span><span>(</span><span style="color:#bf616a;">axis</span><span>=</span><span style="color:#d08770;">0</span><span>)
 </span><span>    num_pid_m = tl.</span><span style="color:#bf616a;">cdiv</span><span>(M, </span><span style="color:#bf616a;">BLOCK_SIZE_M</span><span>)
 </span><span>    num_pid_n = tl.</span><span style="color:#bf616a;">cdiv</span><span>(N, </span><span style="color:#bf616a;">BLOCK_SIZE_N</span><span>)
@@ -177,38 +173,34 @@ Subjective categorization of GPU languages.
 </span><span>    pid_m = first_pid_m + ((pid % num_pid_in_group) % group_size_m)
 </span><span>    pid_n = (pid % num_pid_in_group) // group_size_m
 </span><span>
-</span><span>    </span><span style="color:#65737e;"># ----------------------------------------------------------
-</span><span>    </span><span style="color:#65737e;"># Create pointers for the first blocks of A and B.
-</span><span>    </span><span style="color:#65737e;"># We will advance this pointer as we move in the K direction
-</span><span>    </span><span style="color:#65737e;"># and accumulate
-</span><span>    </span><span style="color:#65737e;"># `A` is a block of [BLOCK_SIZE_M, BLOCK_SIZE_K] pointers
-</span><span>    </span><span style="color:#65737e;"># `B` is a block of [BLOCK_SIZE_K, BLOCK_SIZE_N] pointers
-</span><span>    </span><span style="color:#65737e;"># See above `Pointer Arithmetic` section for details
 </span><span>    offs_am = (pid_m * </span><span style="color:#bf616a;">BLOCK_SIZE_M </span><span>+ tl.</span><span style="color:#bf616a;">arange</span><span>(</span><span style="color:#d08770;">0</span><span>, </span><span style="color:#bf616a;">BLOCK_SIZE_M</span><span>)) % M
 </span><span>    offs_bn = (pid_n * </span><span style="color:#bf616a;">BLOCK_SIZE_N </span><span>+ tl.</span><span style="color:#bf616a;">arange</span><span>(</span><span style="color:#d08770;">0</span><span>, </span><span style="color:#bf616a;">BLOCK_SIZE_N</span><span>)) % N
 </span><span>    offs_k = tl.</span><span style="color:#bf616a;">arange</span><span>(</span><span style="color:#d08770;">0</span><span>, </span><span style="color:#bf616a;">BLOCK_SIZE_K</span><span>)
-</span><span>    As = A + (offs_am[:, </span><span style="color:#d08770;">None</span><span>] * stride_am + offs_k[</span><span style="color:#d08770;">None</span><span>, :] * stride_ak)
-</span><span>    Bs = B + (offs_k[:, </span><span style="color:#d08770;">None</span><span>] * stride_bk + offs_bn[</span><span style="color:#d08770;">None</span><span>, :] * stride_bn)
+</span><span>    As = A + \
+</span><span>         (offs_am[:, </span><span style="color:#d08770;">None</span><span>] * stride_am + offs_k[</span><span style="color:#d08770;">None</span><span>, :] * stride_ak)
+</span><span>    Bs = B + \
+</span><span>         (offs_k[:, </span><span style="color:#d08770;">None</span><span>] * stride_bk + offs_bn[</span><span style="color:#d08770;">None</span><span>, :] * stride_bn)
 </span><span>
-</span><span>    </span><span style="color:#65737e;"># -----------------------------------------------------------
-</span><span>    </span><span style="color:#65737e;"># Iterate to compute a block of the C matrix.
-</span><span>    </span><span style="color:#65737e;"># We accumulate into a `[BLOCK_SIZE_M, BLOCK_SIZE_N]` block
-</span><span>    </span><span style="color:#65737e;"># of fp32 values for higher accuracy.
-</span><span>    </span><span style="color:#65737e;"># `accumulator` will be converted back to fp16 after the loop.
-</span><span>    accumulator = tl.</span><span style="color:#bf616a;">zeros</span><span>((</span><span style="color:#bf616a;">BLOCK_SIZE_M</span><span>, </span><span style="color:#bf616a;">BLOCK_SIZE_N</span><span>), </span><span style="color:#bf616a;">dtype</span><span>=tl.float32)
+</span><span>    accumulator = tl.</span><span style="color:#bf616a;">zeros</span><span>(
+</span><span>      (</span><span style="color:#bf616a;">BLOCK_SIZE_M</span><span>, </span><span style="color:#bf616a;">BLOCK_SIZE_N</span><span>), 
+</span><span>      </span><span style="color:#bf616a;">dtype</span><span>=tl.float32
+</span><span>    )
 </span><span>    </span><span style="color:#b48ead;">for </span><span>k </span><span style="color:#b48ead;">in </span><span style="color:#96b5b4;">range</span><span>(</span><span style="color:#d08770;">0</span><span>, tl.</span><span style="color:#bf616a;">cdiv</span><span>(K, </span><span style="color:#bf616a;">BLOCK_SIZE_K</span><span>)):
-</span><span>        </span><span style="color:#65737e;"># Load the next block of A and B, generate a mask by checking the K dimension.
-</span><span>        </span><span style="color:#65737e;"># If it is out of bounds, set it to 0.
-</span><span>        a = tl.</span><span style="color:#bf616a;">load</span><span>(As, </span><span style="color:#bf616a;">mask</span><span>=offs_k[</span><span style="color:#d08770;">None</span><span>, :] &lt; K - k * </span><span style="color:#bf616a;">BLOCK_SIZE_K</span><span>, </span><span style="color:#bf616a;">other</span><span>=</span><span style="color:#d08770;">0.0</span><span>)
-</span><span>        b = tl.</span><span style="color:#bf616a;">load</span><span>(Bs, </span><span style="color:#bf616a;">mask</span><span>=offs_k[:, </span><span style="color:#d08770;">None</span><span>] &lt; K - k * </span><span style="color:#bf616a;">BLOCK_SIZE_K</span><span>, </span><span style="color:#bf616a;">other</span><span>=</span><span style="color:#d08770;">0.0</span><span>)
-</span><span>        </span><span style="color:#65737e;"># We accumulate along the K dimension.
+</span><span>        </span><span style="color:#65737e;"># Load the next block of A and B.
+</span><span>        a = tl.</span><span style="color:#bf616a;">load</span><span>(
+</span><span>          As, 
+</span><span>          </span><span style="color:#bf616a;">mask</span><span>=offs_k[</span><span style="color:#d08770;">None</span><span>, :] &lt; K - k * </span><span style="color:#bf616a;">BLOCK_SIZE_K</span><span>, 
+</span><span>          </span><span style="color:#bf616a;">other</span><span>=</span><span style="color:#d08770;">0.0
+</span><span>        )
+</span><span>        b = tl.</span><span style="color:#bf616a;">load</span><span>(
+</span><span>          Bs, 
+</span><span>          </span><span style="color:#bf616a;">mask</span><span>=offs_k[:, </span><span style="color:#d08770;">None</span><span>] &lt; K - k * </span><span style="color:#bf616a;">BLOCK_SIZE_K</span><span>, 
+</span><span>          </span><span style="color:#bf616a;">other</span><span>=</span><span style="color:#d08770;">0.0
+</span><span>        )
 </span><span>        accumulator = tl.</span><span style="color:#bf616a;">dot</span><span>(a, b, accumulator)
-</span><span>        </span><span style="color:#65737e;"># Advance the ptrs to the next K block.
 </span><span>        As += </span><span style="color:#bf616a;">BLOCK_SIZE_K </span><span>* stride_ak
 </span><span>        Bs += </span><span style="color:#bf616a;">BLOCK_SIZE_K </span><span>* stride_bk
 </span><span>
-</span><span>    </span><span style="color:#65737e;"># -----------------------------------------------------------
-</span><span>    </span><span style="color:#65737e;"># Write back the block of the output matrix C with masks.
 </span><span>    offs_cm = pid_m * </span><span style="color:#bf616a;">BLOCK_SIZE_M </span><span>+ tl.</span><span style="color:#bf616a;">arange</span><span>(</span><span style="color:#d08770;">0</span><span>, </span><span style="color:#bf616a;">BLOCK_SIZE_M</span><span>)
 </span><span>    offs_cn = pid_n * </span><span style="color:#bf616a;">BLOCK_SIZE_N </span><span>+ tl.</span><span style="color:#bf616a;">arange</span><span>(</span><span style="color:#d08770;">0</span><span>, </span><span style="color:#bf616a;">BLOCK_SIZE_N</span><span>)
 </span><span>    Cs = C + stride_cm * offs_cm[:, </span><span style="color:#d08770;">None</span><span>] + stride_cn * offs_cn[</span><span style="color:#d08770;">None</span><span>, :]
