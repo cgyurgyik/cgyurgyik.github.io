@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="Christophe Gyurgyik">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Christophe Gyurgyik | PhD Student, Stanford University</title>
+
+  <link rel="icon" href="/flower.svg" type="image/svg+xml">
+
+  <link rel="stylesheet" href=https://cgyurgyik.github.io/css/normalize.css>
+  <link rel="stylesheet" href=https://cgyurgyik.github.io/css/default.css>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css" integrity="sha512-b1ASx0WHgVFL5ZQhTgiPWX+68KjS38Jk87jg7pe+qC7q9YkEtFq0z7xCglv7qGIs/68d3mAp+StfC8WKC5SSAg==" crossorigin="anonymous"/>
+
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="https://cgyurgyik.github.io/post/atom.xml">
+  
+
+</head>
+
+<body>
+  <header>
+    <h1 class="name"><a class="unstyled-link" href="/">Christophe Gyurgyik</a></h1>
+    <nav>
+      <a class="unstyled-link nav-item" href="/#publications">Publications</a>
+      <a class="unstyled-link nav-item" href="/#posts">Posts</a>
+      <a class="unstyled-link nav-item" href="/files/resume.pdf">CV</a>
+    </nav>
+  </header>
+  <section class="section">
+    <div class="container">
+      
+<div class="post-header">
+<h1 class="title">
+  (draft) The GPU Programming Language Triangle
+</h1>
+<div class="date">
+Subjective categorization of GPU languages.
+</div>
+<p class="date">April 11, 2024</p>
+</div>
+
+<div class="post">
+<p>Many programming languages exist today to run fast (and hopefully safe) programs on a GPU. These range from languages in the C family with directives to (mostly) functional languages that veil the low-level details of the hardware. A GPU excels at executing tasks that share a common principal: massive parallelelism. This includes scientific computing, graphics processing, and machine learning. </p>
+<p>If the task cannot be parallelized sufficiently, then a CPU wins - it is the jack-of-all-trades of computer hardware. Many programming languages exist today to harness the potential of a CPU. Typically, these languages need to make trade-offs between three aspects: <em>safety</em>, <em>performance</em>, and <em>productivity</em>. This is depicted as a triangle, where the three aforementioned characterizations are placed at the vertices. Then, programming languages are placed somewhere along (or even in) the triangle to demonstrate what influenced their design.</p>
+<p><img src="https://cgyurgyik.github.io/post/gpu-languages/cpu-triangle.png" alt="cpu-triangle" /></p>
+<p>We define <em>safety</em> as a measurement of how correct the program is, for some definiton of correct. This definition could be “memory accesses are always legal” or “this program is formally proven to be correct under some set of axioms.” We use <em>performance</em> to quantify the amount of work accomplished by the program. Typically, as a language provides more and more abstractions to simplify the complexity of a CPU, it will emit less performant code. Contrary to what one might think, performance might not always be a primary concern. Running a program in 0.1 seconds versus 0.01 seconds is a magnitude of order difference, and yet likely unheeded for a student who wants to plot a graph. Lastly, <em>productivity</em> is a function of the additional cognitive exertion required to reason about a program and it’s objective(s). Even putting aside the grandiose debate on syntax, this is likely the most subjective. For example, a CPU performance engineer might claim C as the most productive language because it can easily be mapped to the compiled machine code. On the other hand, a Machine Learning (ML) scientist would avow Python is their tool of choice given the number of high level ML frameworks - a model can be written in 10 lines of code instead of 10,000! There is no ubiquity in the definition of <em>productivity</em>, and that’s OK, so long as we characterize it before arguing one language is more productive than another.</p>
+<p>This post isn’t about CPU programming languages, however. Instead, we’ll focus on programming languages that can, by means of compilation or interpretation, run on a GPU. Many such languages exist today. For example, <a rel="noopener nofollow noreferrer" target="_blank" href="http://learningsys.org/nips17/assets/papers/paper_16.pdf">CuPy</a> is a GPU-powered version of Numpy, which allows users to ignore benign terms like “block size” and “thread index”. The <a rel="noopener nofollow noreferrer" target="_blank" href="https://docs.nvidia.com/cuda/">CUDA C language</a> is a performance engineer’s best friend (for NVIDIA GPUs, at least); it has perilous control over instruction selection for compute-bound kernels and the memory hierarchy for memory-bound kernels. In between these exist a range of languages, that attempt to provide some equilibrium between <em>safety</em>, <em>performance</em>, and <em>productivity</em>.</p>
+<h2 id="the-of-gpu-programming-languages">The △ of GPU Programming Languages</h2>
+<p>GPUs are specialists - they perform well for embarrassingly parallel problems. The definition of <em>safety</em> remains unchanged: our programs should produce a correct output, for some definition of correct. On the other hand, <em>performance</em> is a key component of GPU programming languages. This is exemplified by the escape hatches even high-level GPU languages provide to squeeze out more performance, e.g., CuPy, a high-level Python framework, provides an API to access low-level CUDA instructions and <a rel="noopener nofollow noreferrer" target="_blank" href="https://futhark-lang.org/publications/fhpc16.pdf">Futhark</a>, a purely functional array language, has additional semantics for in-place array updates. Therefore, we’ll assume that all GPU languages want to produce performant code, and, if it cannot, it is not useful. We’ll instead define our second vertex as <em>versatility</em>, a metric of how much control a user has over the GPU. Intuitively, writing directly in PTX would provide the most versatility. A more versatile language can do everything a less versatile language can do, at the cost of verbosity and complexity. Moreover, a more versatile language will always be able to write at least as performant programs as less versatile languages. Lastly, we define <em>productivity</em> as a function of the cognitive exertion required to reason about the GPU programming model. Mental capacity is finite; ideally one could focus solely on the algorithm and not have to think about the innards of a GPU.</p>
+<p>We’ve now defined the three vertices of a GPU programming language triangle. We have a selection of languages spanning both industry and research, which are specific to GPU hardware: <a rel="noopener nofollow noreferrer" target="_blank" href="https://arxiv.org/pdf/2305.03448.pdf">Descend</a>, Triton, Futhark, CuPy, <a rel="noopener nofollow noreferrer" target="_blank" href="https://numba.pydata.org/numba-doc/latest/cuda/index.html">Numba</a>, CUDA, <a rel="noopener nofollow noreferrer" target="_blank" href="https://www.khronos.org/opencl/">OpenCL</a>, and <a rel="noopener nofollow noreferrer" target="_blank" href="https://rocm.docs.amd.com/projects/HIP/en/latest/">HIP</a>. Consider the new triangle below:</p>
+<p><img src="https://cgyurgyik.github.io/post/gpu-languages/gpu-triangle.png" alt="gpu-triangle" /></p>
+<p>These placements assume someone is trying to write efficient GPU kernels, and we acknowledge they are entirely subjective. We’ll spend the rest of this post providing examples of different languages, and finish with a slightly deeper dive into the Triton language.</p>
+<h2 id="a-few-examples">A Few Examples</h2>
+<p>In an attempt to justify the language placements above, we provide a few examples of matrix multiplication <code>C = A @ B</code>, the defacto standard for high performance computing. Consider the code sample below, written in Futhark:</p>
+<pre data-lang="haskell" class="language-haskell "><code class="language-haskell" data-lang="haskell">-- (Written in Futhark v0.25.15)
+def matmul [i][k][j] (A: [i][k]i32) (B: [k][j]i32) : [i][j]i32 =
+  map (\Ai -&gt;
+    map (\Bj -&gt;
+      reduce (+) 0 (map \(x, y) -&gt; x * y (zip Ai Bj)))
+        (transpose B)
+  ) 
+    A
+</code></pre>
+<p>This programming language does not allude to threads, blocks, or memory - instead, the user relies entirely upon the compiler to ensure the code is efficient. </p>
+<p>Conversely, Descend is a “safe-by-construction” imperative language. Inspired by Rust, Descend guarantees legal CPU and GPU memory management at compile time by tracking <em>ownership</em> and <em>lifetimes</em>. Following the previous example, we write matrix multiply in Descend:</p>
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">&#x2F;&#x2F; (Descend does not have releases; written on 12 April 2024.)
+fn matmul&lt;BLOCK: nat, i: nat, j: nat, k: nat, r: prv&gt;(
+    A: &amp;r shrd gpu.global [i32; i*k],
+    B: &amp;r shrd gpu.global [i32; k*j],
+    C: &amp;r uniq gpu.global [i32; i*j]
+) -[grid: gpu.grid&lt;XY&lt;j&#x2F;BLOCK, i&#x2F;BLOCK&gt;, XY&lt;BLOCK, BLOCK&gt;&gt;] -&gt; () {
+    sched(Y) block_row in grid {
+        sched(X) block in block_row {
+            sched(Y) thread_row in block {
+                sched(X) thread in thread_row {
+                    let Ai = &amp;shrd (*A)
+                        .to_view
+                        .grp::&lt;k&gt;
+                        .grp::&lt;BLOCK&gt;[[block_row]][[thread_row]];
+                    let Bj = &amp;shrd (*B)
+                        .to_view
+                        .grp::&lt;j&gt;
+                        .transp
+                        .grp::&lt;BLOCK&gt;[[block]][[thread]];
+                    let mut Cij = &amp;uniq (*C)
+                        .to_view
+                        .grp::&lt;j&gt;
+                        .grp::&lt;BLOCK&gt;[[block_row]]
+                        .transp
+                        .grp::&lt;BLOCK&gt;[[block]]
+                        .transp[[thread_row]][[thread]];
+<pre><code>                let mut sum = 0;
+                for e in 0..k { 
+                  sum = sum + (*Ai)[e] * (*Bj)[e] 
+                };
+                *Cij = sum
+            }
+        }
+    }
+}
+</code></pre>
+<p>}
+</code></pre></p>
+<p>Lastly, we write matrix multiplication in CUDA, which follows the Single Instruction Multiple Thread (SIMT) programming paradigm. This low-level language can easily be mapped to the generated PTX, which shows how versatile it really is. Consider the naive square matrix multiplication below, where each dimension has size <code>n</code>:</p>
+<pre data-lang="cpp" class="language-cpp "><code class="language-cpp" data-lang="cpp">__global__ void matmul(const int *A, const int *B, int *C, int n) {
+  int Ai = blockIdx.y * blockDim.y + threadIdx.y;
+  int Bj = blockIdx.x * blockDim.x + threadIdx.x;
+<p>int temporary = 0;
+for (int k = 0; k &lt; n; k++) {
+temporary += A[Ai * n + k] * B[Bj + n * k];
+}
+C[Ai * n + Bj] = temporary;
+}
+</code></pre></p>
+<p>In the example above, each thread loads one row of A and one column of B from global memory, performs an inner product, and stores the result to C. This naive implementation is memory-bound, i.e., no matter how fast the additions and multiplies occur, we will always be waiting on data movement. We can mitigate the overhead of global memory by using a lower-latency memory: shared memory. Note that this will require significant changes to the structure of our code: we need to rewrite loop bounds, update indices, synchronize threads, etc. This is demonstrated in the example below:</p>
+<pre data-lang="cpp" class="language-cpp "><code class="language-cpp" data-lang="cpp">__global__ void matmul(const int *A, const int *B, int *C, int n) {
+  int Ai = blockIdx.y * blockDim.y + threadIdx.y;
+  int Bj = blockIdx.x * blockDim.x + threadIdx.x;
+<p><strong>shared</strong> int shA[n];
+<strong>shared</strong> int shB[n];</p>
+<p>int temporary = 0;
+for (int i = 0; i &lt; n; i += blockDim.x) {
+shA[threadIdx.y * blockDim.x + threadIdx.x] = A[Ai * n + i + threadIdx.x    ];
+shB[threadIdx.y * blockDim.x + threadIdx.x] = B[Bj + n * i + threadIdx.y * n];</p>
+<pre><code>__syncthreads(); &amp;#x2F;&amp;#x2F; Wait until all threads finish loading to shared memory.
+for (int j = 0; j &amp;lt; blockDim.x; j++) {
+  temporary +=
+    shA[threadIdx.y * blockDim.x + j] * shB[j * blockDim.x + threadIdx.x];
+}
+__syncthreads(); &amp;#x2F;&amp;#x2F; Wait until all threads finish reading from shared memory.
+</code></pre>
+<p>}
+C[Ai * n + Bj] = temporary;
+}
+</code></pre></p>
+<p>This is just one of many optimizations to get a performant matrix multiplication kernel. We aren’t even considering multiple-level tiling, using Tensor Cores, etc. In some utopian setting, we wouldn’t <em>need</em> to, the compiler would do this automatically for us; in comes <a rel="noopener nofollow noreferrer" target="_blank" href="https://www.eecs.harvard.edu/~htk/publication/2019-mapl-tillet-kung-cox.pdf">Triton</a>.</p>
+<h2 id="what-is-triton">What is Triton?</h2>
+<p>Triton is an imperative language and compiler stack to simplify the arduous process of writing GPU kernels. Antithetical to the SIMT model, users write programs that load, compute upon, and store <em>blocks</em> of memory. These blocks are accessed via a pointer interface. Then, the compiler automatically handles optimizations such as multi-threading, using fast memory, tensor cores, etc. So, the user must handle the outermost level of tiling, via loads and stores to global memory, and then the compiler handles the rest. To begin, we’ll compare a simple program <code>B = A + 1</code>, where <code>|A| = |B| = n</code>.</p>
+<p><img src="https://cgyurgyik.github.io/post/gpu-languages/side-by-side-kernel.png" alt="side-by-side" /></p>
+<p>The Triton kernel is working on a block of threads, whose position in a grid is indicated by the <code>program_id</code>. The offsets are a block of pointers that will be used to determine where in global memory we want to load. These are masked off to ensure we don’t exceed the length of the array <code>n</code>.</p>
+<h3 id="who-uses-it">Who uses it?</h3>
+<p>The Triton language and compiler stack is currently open source under <a rel="noopener nofollow noreferrer" target="_blank" href="https://openai.com/research/triton">OpenAI</a>. Additionally, <a rel="noopener nofollow noreferrer" target="_blank" href="https://pytorch.org/assets/pytorch2-2.pdf">PyTorch 2.0</a> translates PyTorch programs into Triton in its new compiler backend, TorchInductor. Lastly, <a rel="noopener nofollow noreferrer" target="_blank" href="https://research.google/pubs/compiling-machine-learning-programs-via-high-level-tracing/">JAX</a>uses Triton as a GPU backend target for its new kernel programming model, <a rel="noopener nofollow noreferrer" target="_blank" href="https://jax.readthedocs.io/en/latest/pallas/index.html">Pallas</a>.</p>
+<h3 id="strengths">Strengths</h3>
+<p>Writing optimal GPU programs is hard. For a memory-bound kernel, one must consider, at a minimum, the following:</p>
+<ul>
+<li>Memory coalescing (in global memory): thread access patterns are important to ensure we minimize the number of fetches.</li>
+<li>Memory hierarchy (global $\rightarrow$ shared $\rightarrow$ registers). Using a lower-latency memory is better, but requires synchronization and low-level instructions such as intra-warp shuffles.</li>
+<li>Bank conflicts (in shared memory): data structure layout is important to avoid bank conflicts, e.g., Area of Structures (AoS) versus Structure of Arrays (SoA).</li>
+</ul>
+<p>For a compute-bound kernel such as matrix multiply or convolution, one must map instructions to Tensor Cores. This requires carefully choosing tile size, SM count, etc. Such optimizations are not always trivial; this can be illustrated by the number of NVIDIA Developer blog posts [<a rel="noopener nofollow noreferrer" target="_blank" href="https://developer.nvidia.com/blog/gpu-pro-tip-fast-histograms-using-shared-atomics-maxwell/">1</a>, <a rel="noopener nofollow noreferrer" target="_blank" href="https://developer.nvidia.com/blog/using-shared-memory-cuda-cc/">2</a>, <a rel="noopener nofollow noreferrer" target="_blank" href="https://developer.nvidia.com/blog/efficient-matrix-transpose-cuda-cc/">3</a>, <a rel="noopener nofollow noreferrer" target="_blank" href="https://developer.nvidia.com/blog/using-cuda-warp-level-primitives/">4</a>, <a rel="noopener nofollow noreferrer" target="_blank" href="https://developer.nvidia.com/blog/programming-tensor-cores-cuda-9/">5</a>].</p>
+<p>By performing block-level data flow analysis, the Triton language can <em>automatically</em> unlock optimizations such as memory coalescing, thread swizzling, pre-fetching, vectorization, instruction selection (e.g. Tensor Core), shared memory allocation and synchronization, and more.</p>
+<p>Additionally, Triton provides a few other useful features, such as JIT compilation and auto-tuning support.</p>
+<h3 id="weaknesses">Weaknesses</h3>
+<p>This is a performance <em>savant</em>’s worst nightmare: we ultimately become victim to a “black box” compiler that we can only hope will optimize our kernel. Worse yet, we don’t really have a way out. In other words, there exist optimizations that aren’t clearly accessible from the high-level abstraction of Triton. So, while Triton may be the right choice for quick iteration, it isn’t necessarily the best choice to squeeze out every drop of performance, i.e., it makes an important trade-off between productivity and versatility.</p>
+<p>There is an alluring (yet slightly outdated<span style="white-space:nowrap">
+<label for="sn-1"
+       class="margin-toggle sidenote-number">
+</label>
+</span>
+<input type="checkbox"
+       id="sn-1"
+       class="margin-toggle"/>
+<span class="sidenote">
+Readers should be aware this was written when Triton 1.0 was released. I have run a few of these example kernels on Triton 2.1.0, and found they have improved since then, e.g., there is no longer unnecessary thread synchronizations in the reduction kernel. However, the point is still relevant: the Triton compiler is opaque.
+</span>
+<p>) <a rel="noopener nofollow noreferrer" target="_blank" href="https://fkong.tech/posts/2023-04-23-triton-cuda/">blog post</a> by a senior engineer at NVIDIA, who inspects the emitted code from the Triton compiler, and reverse engineers the PTX back to CUDA (with the assistance of LLMs, no less).</p></p>
+<p>For a deeper dive into Triton, I recommend the <a rel="noopener nofollow noreferrer" target="_blank" href="https://triton-lang.org/main/getting-started/tutorials/index.html">tutorial(s)</a>.</p>
+<h2 id="takeaways">Takeaways</h2>
+<ul>
+<li>GPU languages should always have performance as one of their north stars. If the user didn’t want a fast program, then they could likely use a CPU.</li>
+<li>There will always be trade-offs between safety, productivity, and versatility. These should provide guidance in the design of your language. For example, Triton is designed for fast iteration on neural network kernels, where “everything is a matrix multiply,” and fusion is an easy way to reduce memory bandwidth.</li>
+<li>A compiler provides automatic optimization, but can quickly become a burden for the performance engineer. This is <a rel="noopener nofollow noreferrer" target="_blank" href="http://lua-users.org/lists/lua-l/2011-02/msg00742.html">highlighted</a> by Mike Pall in a thread about the LuaJIT compiler. This is also a driving force behind the <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/abs/10.1145/3519939.3523446">Exo Language</a>, which attempts to <em>externalize</em> the compiler so that the optimizations are transparent.</li>
+</ul>
+
+</div>
+
+
+    </div>
+  </section>
+
+<footer>
+  &copy;&nbsp;2023 Christophe Gyurgyik &middot; Built using <a href="https://www.getzola.org/">Zola</a> &middot; Adapted from <a href="https://www.rachitnigam.com/">Rachit Nigam</a>
+</footer>
+
+</body>
+
+</html>
