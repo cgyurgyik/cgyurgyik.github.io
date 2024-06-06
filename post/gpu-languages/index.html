@@ -142,7 +142,7 @@ C[Ai * n + Bj] = temporary;
 <p><img src="https://cgyurgyik.github.io/post/gpu-languages/side-by-side-kernel.png" alt="side-by-side" /></p>
 <p>The Triton kernel is working on a block of threads, whose position in a grid is indicated by the <code>program_id</code>. The offsets are a block of pointers that will be used to determine where in global memory we want to load. These are masked off to ensure we don’t exceed the length of the array <code>n</code>.</p>
 <h3 id="who-uses-it">Who uses it?</h3>
-<p>The Triton language and compiler stack is currently open source under <a rel="noopener nofollow noreferrer" target="_blank" href="https://openai.com/research/triton">OpenAI</a>. Additionally, <a rel="noopener nofollow noreferrer" target="_blank" href="https://pytorch.org/assets/pytorch2-2.pdf">PyTorch 2.0</a> translates PyTorch programs into Triton in its new compiler backend, TorchInductor. Lastly, <a rel="noopener nofollow noreferrer" target="_blank" href="https://research.google/pubs/compiling-machine-learning-programs-via-high-level-tracing/">JAX</a>uses Triton as a GPU backend target for its new kernel programming model, <a rel="noopener nofollow noreferrer" target="_blank" href="https://jax.readthedocs.io/en/latest/pallas/index.html">Pallas</a>.</p>
+<p>The Triton language and compiler stack is currently open source under <a rel="noopener nofollow noreferrer" target="_blank" href="https://openai.com/research/triton">OpenAI</a>. Additionally, <a rel="noopener nofollow noreferrer" target="_blank" href="https://pytorch.org/assets/pytorch2-2.pdf">PyTorch 2.0</a> translates PyTorch programs into Triton in its new compiler backend, TorchInductor. Lastly, <a rel="noopener nofollow noreferrer" target="_blank" href="https://research.google/pubs/compiling-machine-learning-programs-via-high-level-tracing/">JAX</a> uses Triton as a GPU backend target for its new kernel programming model, <a rel="noopener nofollow noreferrer" target="_blank" href="https://jax.readthedocs.io/en/latest/pallas/index.html">Pallas</a>.</p>
 <h3 id="strengths">Strengths</h3>
 <p>Writing optimal GPU programs is hard. For a memory-bound kernel, one must consider, at a minimum, the following:</p>
 <ul>
@@ -165,7 +165,7 @@ C[Ai * n + Bj] = temporary;
        id="sn-1"
        class="margin-toggle"/>
 <span class="sidenote">
-Readers should be aware this was written when Triton 1.0 was released. I have run a few of these example kernels on Triton 2.1.0, and found they have improved since then, e.g., there is no longer unnecessary thread synchronizations in the reduction kernel. However, the point is still relevant: the Triton compiler is opaque.
+Readers should be aware this was written when Triton 1.0 was released. I have run a few of these example kernels on Triton 2.1.0, and found they have improved since then, e.g., there is no longer unnecessary thread synchronizations in the reduction kernel. However, the post’s objective is still relevant: the Triton compiler is opaque.
 </span>
 ) <a rel="noopener nofollow noreferrer" target="_blank" href="https://fkong.tech/posts/2023-04-23-triton-cuda/">blog post</a> by a senior engineer at NVIDIA, who inspects the emitted code from the Triton compiler, and reverse engineers the PTX back to CUDA (with the assistance of LLMs, no less).</p>
 <p>For a deeper dive into Triton, I recommend the <a rel="noopener nofollow noreferrer" target="_blank" href="https://triton-lang.org/main/getting-started/tutorials/index.html">tutorial(s)</a>.</p>
