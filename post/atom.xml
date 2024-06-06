@@ -34,92 +34,90 @@
 &lt;p&gt;These placements assume someone is trying to write efficient GPU kernels, and we acknowledge they are entirely subjective. We’ll spend the rest of this post providing examples of different languages, and finish with a slightly deeper dive into the Triton language.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;a-few-examples&quot;&gt;A Few Examples&lt;&#x2F;h2&gt;
 &lt;p&gt;In an attempt to justify the language placements above, we provide a few examples of matrix multiplication &lt;code&gt;C = A @ B&lt;&#x2F;code&gt;, the defacto standard for high performance computing. Consider the code sample below, written in Futhark:&lt;&#x2F;p&gt;
-&lt;pre data-lang=&quot;haskell&quot; class=&quot;language-haskell &quot;&gt;&lt;code class=&quot;language-haskell&quot; data-lang=&quot;haskell&quot;&gt;-- (Written in Futhark v0.25.15)
-def matmul [i][k][j] (A: [i][k]i32) (B: [k][j]i32) : [i][j]i32 =
-  map (\Ai -&amp;gt;
-    map (\Bj -&amp;gt;
-      reduce (+) 0 (map \(x, y) -&amp;gt; x * y (zip Ai Bj)))
-        (transpose B)
-  ) 
-    A
-&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;haskell&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-haskell &quot;&gt;&lt;code class=&quot;language-haskell&quot; data-lang=&quot;haskell&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;-- (Written in Futhark v0.25.15)
+&lt;&#x2F;span&gt;&lt;span&gt;def matmul [i][k][j] (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;A&lt;&#x2F;span&gt;&lt;span&gt;: [i][k]i32) (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;B&lt;&#x2F;span&gt;&lt;span&gt;: [k][j]i32) : [i][j]i32 =
+&lt;&#x2F;span&gt;&lt;span&gt;  map (\&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;Ai &lt;&#x2F;span&gt;&lt;span&gt;-&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    map (\&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;Bj &lt;&#x2F;span&gt;&lt;span&gt;-&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;      reduce &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;(+) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt; (map \(x, y) -&amp;gt; x * y (zip &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;Ai Bj&lt;&#x2F;span&gt;&lt;span&gt;)))
+&lt;&#x2F;span&gt;&lt;span&gt;        (transpose &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;B&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;  ) 
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;A
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;This programming language does not allude to threads, blocks, or memory - instead, the user relies entirely upon the compiler to ensure the code is efficient. &lt;&#x2F;p&gt;
 &lt;p&gt;Conversely, Descend is a “safe-by-construction” imperative language. Inspired by Rust, Descend guarantees legal CPU and GPU memory management at compile time by tracking &lt;em&gt;ownership&lt;&#x2F;em&gt; and &lt;em&gt;lifetimes&lt;&#x2F;em&gt;. Following the previous example, we write matrix multiply in Descend:&lt;&#x2F;p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;#x2F;&amp;#x2F; (Descend does not have releases; written on 12 April 2024.)
-fn matmul&amp;lt;BLOCK: nat, i: nat, j: nat, k: nat, r: prv&amp;gt;(
-    A: &amp;amp;r shrd gpu.global [i32; i*k],
-    B: &amp;amp;r shrd gpu.global [i32; k*j],
-    C: &amp;amp;r uniq gpu.global [i32; i*j]
-) -[grid: gpu.grid&amp;lt;XY&amp;lt;j&amp;#x2F;BLOCK, i&amp;#x2F;BLOCK&amp;gt;, XY&amp;lt;BLOCK, BLOCK&amp;gt;&amp;gt;] -&amp;gt; () {
-    sched(Y) block_row in grid {
-        sched(X) block in block_row {
-            sched(Y) thread_row in block {
-                sched(X) thread in thread_row {
-                    let Ai = &amp;amp;shrd (*A)
-                        .to_view
-                        .grp::&amp;lt;k&amp;gt;
-                        .grp::&amp;lt;BLOCK&amp;gt;[[block_row]][[thread_row]];
-                    let Bj = &amp;amp;shrd (*B)
-                        .to_view
-                        .grp::&amp;lt;j&amp;gt;
-                        .transp
-                        .grp::&amp;lt;BLOCK&amp;gt;[[block]][[thread]];
-                    let mut Cij = &amp;amp;uniq (*C)
-                        .to_view
-                        .grp::&amp;lt;j&amp;gt;
-                        .grp::&amp;lt;BLOCK&amp;gt;[[block_row]]
-                        .transp
-                        .grp::&amp;lt;BLOCK&amp;gt;[[block]]
-                        .transp[[thread_row]][[thread]];
-                    
-                    let mut sum = 0;
-                    for e in 0..k { 
-                      sum = sum + (*Ai)[e] * (*Bj)[e] 
-                    };
-                    *Cij = sum
-                }
-            }
-        }
-    }
-}
-&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-linenos data-lang=&quot;rust&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;1&lt;&#x2F;td&gt;&lt;td&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; (Descend does not have releases; written on 12 April 2024.)
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;2&lt;&#x2F;td&gt;&lt;td&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;matmul&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;BLOCK: nat, i: nat, j: nat, k: nat, r: prv&amp;gt;(
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;3&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;A&lt;&#x2F;span&gt;&lt;span&gt;: &amp;amp;r shrd gpu.global [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;i32&lt;&#x2F;span&gt;&lt;span&gt;; i*k],
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;4&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;B&lt;&#x2F;span&gt;&lt;span&gt;: &amp;amp;r shrd gpu.global [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;i32&lt;&#x2F;span&gt;&lt;span&gt;; k*j],
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;5&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;C&lt;&#x2F;span&gt;&lt;span&gt;: &amp;amp;r uniq gpu.global [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;i32&lt;&#x2F;span&gt;&lt;span&gt;; i*j]
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;6&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;) -[grid: gpu.grid&amp;lt;XY&amp;lt;j&lt;&#x2F;span&gt;&lt;span style=&quot;background-color:#bf616a;color:#2b303b;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;BLOCK, i&lt;&#x2F;span&gt;&lt;span style=&quot;background-color:#bf616a;color:#2b303b;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;BLOCK&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;, XY&amp;lt;BLOCK, BLOCK&amp;gt;&amp;gt;] -&amp;gt; () {
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;7&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;sched&lt;&#x2F;span&gt;&lt;span&gt;(Y) block_row in grid {
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;8&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;sched&lt;&#x2F;span&gt;&lt;span&gt;(X) block in block_row {
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;9&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;sched&lt;&#x2F;span&gt;&lt;span&gt;(Y) thread_row in block {
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;10&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;sched&lt;&#x2F;span&gt;&lt;span&gt;(X) thread in thread_row {
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;11&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; Ai = &amp;amp;shrd (*A)
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;12&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                        .to_view
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;13&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                        .grp::&amp;lt;k&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;14&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                        .grp::&amp;lt;BLOCK&amp;gt;[[block_row]][[thread_row]];
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;15&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; Bj = &amp;amp;shrd (*B)
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;16&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                        .to_view
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;17&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                        .grp::&amp;lt;j&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;18&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                        .transp
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;19&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                        .grp::&amp;lt;BLOCK&amp;gt;[[block]][[thread]];
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;20&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let mut&lt;&#x2F;span&gt;&lt;span&gt; Cij = &amp;amp;uniq (*C)
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;21&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                        .to_view
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;22&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                        .grp::&amp;lt;j&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;23&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                        .grp::&amp;lt;BLOCK&amp;gt;[[block_row]]
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;24&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                        .transp
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;25&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                        .grp::&amp;lt;BLOCK&amp;gt;[[block]]
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;26&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                        .transp[[thread_row]][[thread]];
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;27&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                    
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;28&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let mut&lt;&#x2F;span&gt;&lt;span&gt; sum = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;29&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; e in &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;..k { 
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;30&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                      sum = sum + (*Ai)[e] * (*Bj)[e] 
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;31&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                    };
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;32&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                    *Cij = sum
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;33&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;                }
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;34&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;            }
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;35&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;36&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;37&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;Lastly, we write matrix multiplication in CUDA, which follows the Single Instruction Multiple Thread (SIMT) programming paradigm. This low-level language can easily be mapped to the generated PTX, which shows how versatile it really is. Consider the naive square matrix multiplication below, where each dimension has size &lt;code&gt;n&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
-&lt;pre&gt;&lt;code&gt;__global__ void matmul(const int *A, const int *B, int *C, int n) {
-  int Ai = blockIdx.y * blockDim.y + threadIdx.y;
-  int Bj = blockIdx.x * blockDim.x + threadIdx.x;
-
-  int temporary = 0;
-  for (int k = 0; k &amp;lt; n; k++) {
-    temporary += A[Ai * n + k] * B[Bj + n * k];
-  }
-  C[Ai * n + Bj] = temporary;
-}
-&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;__global__ void matmul(const int *A, const int *B, int *C, int n) {
+&lt;&#x2F;span&gt;&lt;span&gt;  int Ai = blockIdx.y * blockDim.y + threadIdx.y;
+&lt;&#x2F;span&gt;&lt;span&gt;  int Bj = blockIdx.x * blockDim.x + threadIdx.x;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  int temporary = 0;
+&lt;&#x2F;span&gt;&lt;span&gt;  for (int k = 0; k &amp;lt; n; k++) {
+&lt;&#x2F;span&gt;&lt;span&gt;    temporary += A[Ai * n + k] * B[Bj + n * k];
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;  C[Ai * n + Bj] = temporary;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;In the example above, each thread loads one row of A and one column of B from global memory, performs an inner product, and stores the result to C. This naive implementation is memory-bound, i.e., no matter how fast the additions and multiplies occur, we will always be waiting on data movement. We can mitigate the overhead of global memory by using a lower-latency memory: shared memory. Note that this will require significant changes to the structure of our code: we need to rewrite loop bounds, update indices, synchronize threads, etc. This is demonstrated in the example below:&lt;&#x2F;p&gt;
-&lt;pre&gt;&lt;code&gt;__global__ void matmul(const int *A, const int *B, int *C, int n) {
-  int Ai = blockIdx.y * blockDim.y + threadIdx.y;
-  int Bj = blockIdx.x * blockDim.x + threadIdx.x;
-
-  __shared__ int shA[n];
-  __shared__ int shB[n];
-
-  int temporary = 0;
-  for (int i = 0; i &amp;lt; n; i += blockDim.x) {
-    shA[threadIdx.y * blockDim.x + threadIdx.x] = A[Ai * n + i + threadIdx.x    ];
-    shB[threadIdx.y * blockDim.x + threadIdx.x] = B[Bj + n * i + threadIdx.y * n];
-
-    &amp;#x2F;&amp;#x2F; Wait until all threads finish loading to shared memory.
-    __syncthreads(); 
-    for (int j = 0; j &amp;lt; blockDim.x; j++) {
-      temporary +=
-        shA[threadIdx.y * blockDim.x + j] * shB[j * blockDim.x + threadIdx.x];
-    }
-    &amp;#x2F;&amp;#x2F; Wait until all threads finish reading from shared memory.
-    __syncthreads();
-  }
-  C[Ai * n + Bj] = temporary;
-}
-&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-linenos data-lang=&quot;cpp&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;1&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;__global__ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;matmul&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;const int &lt;&#x2F;span&gt;&lt;span&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;A&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;const int &lt;&#x2F;span&gt;&lt;span&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;B&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;C&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;n&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;2&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; Ai = blockIdx.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;y &lt;&#x2F;span&gt;&lt;span&gt;* blockDim.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;y &lt;&#x2F;span&gt;&lt;span&gt;+ threadIdx.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;y&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;3&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; Bj = blockIdx.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x &lt;&#x2F;span&gt;&lt;span&gt;* blockDim.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x &lt;&#x2F;span&gt;&lt;span&gt;+ threadIdx.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;4&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;5&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;  __shared__ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; shA[n];
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;6&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;  __shared__ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; shB[n];
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;7&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;8&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; temporary = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;9&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; i = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;; i &amp;lt; n; i += blockDim.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;10&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;    shA[threadIdx.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;y &lt;&#x2F;span&gt;&lt;span&gt;* blockDim.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x &lt;&#x2F;span&gt;&lt;span&gt;+ threadIdx.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x&lt;&#x2F;span&gt;&lt;span&gt;] = A[Ai * n + i + threadIdx.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x    &lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;11&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;    shB[threadIdx.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;y &lt;&#x2F;span&gt;&lt;span&gt;* blockDim.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x &lt;&#x2F;span&gt;&lt;span&gt;+ threadIdx.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x&lt;&#x2F;span&gt;&lt;span&gt;] = B[Bj + n * i + threadIdx.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;y &lt;&#x2F;span&gt;&lt;span&gt;* n];
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;12&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;13&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;__syncthreads&lt;&#x2F;span&gt;&lt;span&gt;();  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Wait until all threads finish loading to shared memory.
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;14&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; j = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;; j &amp;lt; blockDim.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x&lt;&#x2F;span&gt;&lt;span&gt;; j++) {
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;15&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;      temporary +=
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;16&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;        shA[threadIdx.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;y &lt;&#x2F;span&gt;&lt;span&gt;* blockDim.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x &lt;&#x2F;span&gt;&lt;span&gt;+ j] * shB[j * blockDim.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x &lt;&#x2F;span&gt;&lt;span&gt;+ threadIdx.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;17&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;18&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;__syncthreads&lt;&#x2F;span&gt;&lt;span&gt;();  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; Wait until all threads finish reading from shared memory.
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;19&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;20&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;  C[Ai * n + Bj] = temporary;
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;tr&gt;&lt;td&gt;21&lt;&#x2F;td&gt;&lt;td&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;This is just one of many optimizations to get a performant matrix multiplication kernel. We aren’t even considering multiple-level tiling, using Tensor Cores, etc. In some utopian setting, we wouldn’t &lt;em&gt;need&lt;&#x2F;em&gt; to, the compiler would do this automatically for us; in comes &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;www.eecs.harvard.edu&#x2F;~htk&#x2F;publication&#x2F;2019-mapl-tillet-kung-cox.pdf&quot;&gt;Triton&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;what-is-triton&quot;&gt;What is Triton?&lt;&#x2F;h2&gt;
 &lt;p&gt;Triton is an imperative language and compiler stack to simplify the arduous process of writing GPU kernels. Antithetical to the SIMT model, users write programs that load, compute upon, and store &lt;em&gt;blocks&lt;&#x2F;em&gt; of memory. These blocks are accessed via a pointer interface. Then, the compiler automatically handles optimizations such as multi-threading, using fast memory, tensor cores, etc. So, the user must handle the outermost level of tiling, via loads and stores to global memory, and then the compiler handles the rest. To begin, we’ll compare a simple program &lt;code&gt;B = A + 1&lt;&#x2F;code&gt;, where &lt;code&gt;|A| = |B| = n&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
