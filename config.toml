@@ -25,5 +25,11 @@ news_items = 5
 author = [
   { name = "Griffin Berlstein", link = "https://griffinberlste.in/" },
   { name = "Rachit Nigam", link = "https://rachitnigam.com/" },
-  { name = "Adrian Sampson", link = "http://adriansampson.net" }
+  { name = "Adrian Sampson", link = "http://adriansampson.net" },
+  { name = "Genghan Zhang" , link = "https://zhang677.github.io/" },
+  { name = "Kunle Olukutun", link = "https://engineering.stanford.edu/people/oyekunle-olukotun" },
+  { name = "Paul Mure", link = "https://people.csail.mit.edu/paulmure/" },
+  { name = "Fred Kjolstad", link = "https://fredrikbk.com/" },
+  { name = "Alexander J. Root, link = "https://rootjalex.github.io/" }, 
+  { name = "Bobby Yan", link = "https://bobbyy.org/" },
 ]
