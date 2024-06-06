@@ -138,7 +138,7 @@ Triton is an imperative language and compiler stack to simplify the arduous proc
 The Triton kernel is working on a block of threads, whose position in a grid is indicated by the `program_id`. The offsets are a block of pointers that will be used to determine where in global memory we want to load. These are masked off to ensure we don't exceed the length of the array `n`.
 
 ### Who uses it?
-The Triton language and compiler stack is currently open source under [OpenAI][triton-openai]. Additionally, [PyTorch 2.0][pytorch2] translates PyTorch programs into Triton in its new compiler backend, TorchInductor. Lastly, [JAX][jax]uses Triton as a GPU backend target for its new kernel programming model, [Pallas][pallas].
+The Triton language and compiler stack is currently open source under [OpenAI][triton-openai]. Additionally, [PyTorch 2.0][pytorch2] translates PyTorch programs into Triton in its new compiler backend, TorchInductor. Lastly, [JAX][jax] uses Triton as a GPU backend target for its new kernel programming model, [Pallas][pallas].
 
 ### Strengths
 Writing optimal GPU programs is hard. For a memory-bound kernel, one must consider, at a minimum, the following:
@@ -157,7 +157,7 @@ This is a performance *savant*'s worst nightmare: we ultimately become victim to
 
 There is an alluring (yet slightly outdated
 {% footnote() %}
-Readers should be aware this was written when Triton 1.0 was released. I have run a few of these example kernels on Triton 2.1.0, and found they have improved since then, e.g., there is no longer unnecessary thread synchronizations in the reduction kernel. However, the point is still relevant: the Triton compiler is opaque.
+Readers should be aware this was written when Triton 1.0 was released. I have run a few of these example kernels on Triton 2.1.0, and found they have improved since then, e.g., there is no longer unnecessary thread synchronizations in the reduction kernel. However, the post's objective is still relevant: the Triton compiler is opaque.
 {% end %}) [blog post][demystify] by a senior engineer at NVIDIA, who inspects the emitted code from the Triton compiler, and reverse engineers the PTX back to CUDA (with the assistance of LLMs, no less).
 
 For a deeper dive into Triton, I recommend the [tutorial(s)][triton-tut].
