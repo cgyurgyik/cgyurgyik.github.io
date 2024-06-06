@@ -137,11 +137,7 @@ __global__ void matmul(const int *A, const int *B, int *C, int n) {
 This is just one of many optimizations to get a performant matrix multiplication kernel. We aren't even considering multiple-level tiling, using Tensor Cores, etc. In some utopian setting, we wouldn't *need* to, the compiler would do this automatically for us; in comes [Triton][triton-paper].
 
 ## What is Triton?
-Triton is an imperative language and compiler stack to simplify the arduous process of writing GPU kernels. Antithetical to the SIMT model, users write programs that load, compute upon, and store *blocks* of memory. These blocks are accessed via a pointer interface. Then, the compiler automatically handles optimizations such as multi-threading, using fast memory, tensor cores, etc. So, the user must handle the outermost level of tiling, via loads and stores to global memory, and then the compiler handles the rest. To begin, we'll compare a simple program `B = A + 1`, where `|A| = |B| = n`.
-
-<img src= "/files/images/side-by-side-kernel.png" alt="side-by-side-kernel" style="border: 1px solid black;">
-
-The Triton kernel is working on a block of threads, whose position in a grid is indicated by the `program_id`. The offsets are a block of pointers that will be used to determine where in global memory we want to load. These are masked off to ensure we don't exceed the length of the array `n`.
+Triton is an imperative language and compiler stack to simplify the arduous process of writing GPU kernels. Antithetical to the SIMT model, users write programs that load, compute upon, and store *blocks* of memory. These blocks are accessed via a pointer interface. Then, the compiler automatically handles optimizations such as multi-threading, using fast memory, tensor cores, etc. So, the user must handle the outermost level of tiling, via loads and stores to global memory, and then the compiler handles the rest. The [Triton website][triton-website] provides a comprehensive overview of the language with some concrete examples.
 
 ### Who uses it?
 The Triton language and compiler stack is currently open source under [OpenAI][triton-openai]. Additionally, [PyTorch 2.0][pytorch2] translates PyTorch programs into Triton in its new compiler backend, TorchInductor. Lastly, [JAX][jax] uses Triton as a GPU backend target for its new kernel programming model, [Pallas][pallas].
@@ -166,15 +162,13 @@ There is an alluring (yet slightly outdated
 Readers should be aware this was written when Triton 1.0 was released. I have run a few of these example kernels on Triton 2.1.0, and found they have improved since then, e.g., there is no longer unnecessary thread synchronizations in the reduction kernel. However, the post's objective is still relevant: the Triton compiler is opaque.
 {% end %}) [blog post][demystify] by a senior engineer at NVIDIA, who inspects the emitted code from the Triton compiler, and reverse engineers the PTX back to CUDA (with the assistance of LLMs, no less).
 
-For a deeper dive into Triton, I recommend the [tutorial(s)][triton-tut].
-
 ## Takeaways
 - GPU languages should always have performance as one of their north stars. If the user didn't want a fast program, then they could just use a CPU.
 - There will always be trade-offs between safety, productivity, and versatility. These should provide guidance in the design of your language. For example, Triton is designed for fast iteration on neural network kernels, where "everything is a matrix multiply," and fusion is an easy way to reduce memory bandwidth.
 - A compiler provides automatic optimization, but can quickly become a burden for the performance engineer. This is [highlighted][luajit] by Mike Pall in a thread about the LuaJIT compiler. This is also a driving force behind the [Exo Language][exo], which attempts to *externalize* the compiler so that the optimizations are transparent.
 
 [triton-paper]: https://www.eecs.harvard.edu/~htk/publication/2019-mapl-tillet-kung-cox.pdf
-[triton-tut]: https://triton-lang.org/main/getting-started/tutorials/index.html
+[triton-website]: https://triton-lang.org/main/
 [triton-openai]: https://openai.com/research/triton
 [block-algorithm]: https://dl.acm.org/doi/pdf/10.1145/106973.106981
 [demystify]: https://fkong.tech/posts/2023-04-23-triton-cuda/
