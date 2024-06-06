@@ -47,7 +47,7 @@ This programming language does not allude to threads, blocks, or memory - instea
 
 Conversely, Descend is a "safe-by-construction" imperative language. Inspired by Rust, Descend guarantees legal CPU and GPU memory management at compile time by tracking *ownership* and *lifetimes*. Following the previous example, we write matrix multiply in Descend:
 
-```rust,linenos
+```rust
 // (Descend does not have releases; written on 12 April 2024.)
 fn matmul<BLOCK: nat, i: nat, j: nat, k: nat, r: prv>(
     A: &r shrd gpu.global [i32; i*k],
@@ -90,7 +90,7 @@ fn matmul<BLOCK: nat, i: nat, j: nat, k: nat, r: prv>(
 
 Lastly, we write matrix multiplication in CUDA, which follows the Single Instruction Multiple Thread (SIMT) programming paradigm. This low-level language can easily be mapped to the generated PTX, which shows how versatile it really is. Consider the naive square matrix multiplication below, where each dimension has size `n`:
 
-```
+```cpp
 __global__ void matmul(const int *A, const int *B, int *C, int n) {
   int Ai = blockIdx.y * blockDim.y + threadIdx.y;
   int Bj = blockIdx.x * blockDim.x + threadIdx.x;
@@ -105,7 +105,7 @@ __global__ void matmul(const int *A, const int *B, int *C, int n) {
 
 In the example above, each thread loads one row of A and one column of B from global memory, performs an inner product, and stores the result to C. This naive implementation is memory-bound, i.e., no matter how fast the additions and multiplies occur, we will always be waiting on data movement. We can mitigate the overhead of global memory by using a lower-latency memory: shared memory. Note that this will require significant changes to the structure of our code: we need to rewrite loop bounds, update indices, synchronize threads, etc. This is demonstrated in the example below:
 
-```cpp,linenos
+```cpp
 __global__ void matmul(const int *A, const int *B, int *C, int n) {
   int Ai = blockIdx.y * blockDim.y + threadIdx.y;
   int Bj = blockIdx.x * blockDim.x + threadIdx.x;
