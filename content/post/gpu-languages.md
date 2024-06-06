@@ -12,7 +12,7 @@ Many programming languages exist today to run fast (and hopefully safe) programs
 
 If the task cannot be parallelized sufficiently, then a CPU wins - it is the jack-of-all-trades of computer hardware. Many programming languages exist today to harness the potential of a CPU. Typically, these languages need to make trade-offs between three aspects: *safety*, *performance*, and *productivity*. This is depicted as a triangle, where the three aforementioned characterizations are placed at the vertices. Then, programming languages are placed somewhere along (or even in) the triangle to demonstrate what influenced their design.
 
-<img src= "/files/images/cpu-triangle.png" alt="cpu-triangle" style="border: 2px solid black;">
+<img src= "/files/images/cpu-triangle.png" alt="cpu-triangle" style="border: 2px solid black;" width="60%">
 
 We define *safety* as a measurement of how correct the program is, for some definiton of correct. This definition could be "memory accesses are always legal" or "this program is formally proven to be correct under some set of axioms." We use *performance* to quantify the amount of work accomplished by the program. Typically, as a language provides more and more abstractions to obfuscate the complexity of a CPU, it will emit less performant code. Contrary to what one might think, performance might not always be a primary concern. Running a program in 0.1 seconds versus 0.01 seconds is a magnitude of order difference, and yet likely unheeded for a student who wants to plot a graph. Lastly, *productivity* is a function of the additional cognitive exertion required to reason about a program and it's objective(s). Even putting aside the grandiose debate on syntax, this is likely the most subjective. For example, a CPU performance engineer might claim C as the most productive language because it can easily be mapped to the compiled machine code. On the other hand, a Machine Learning (ML) scientist would avow Python is their tool of choice given the wide array of ML frameworks available - a model can be written in 10 lines of code instead of 10,000! There is no ubiquity in the definition of *productivity*, and that's OK, so long as we characterize it before arguing one language is more productive than another.
 
@@ -143,7 +143,7 @@ Triton is an imperative language and compiler stack to simplify the arduous proc
 The Triton language and compiler stack is currently open source under [OpenAI][triton-openai]. Additionally, [PyTorch 2.0][pytorch2] translates PyTorch programs into Triton in its new compiler backend, TorchInductor. Lastly, [JAX][jax] uses Triton as a GPU backend target for its new kernel programming model, [Pallas][pallas].
 
 ### Strengths
-Writing optimal GPU programs is hard. For a memory-bound kernel, one must consider, at a minimum, the following:
+Writing fast GPU programs is hard. For a memory-bound kernel, one must consider, at a minimum, the following:
 - Memory coalescing (in global memory): thread access patterns are important to ensure we minimize the number of fetches.
 - Memory hierarchy (global $\rightarrow$ shared $\rightarrow$ registers). Using a lower-latency memory is better, but requires synchronization and low-level instructions such as intra-warp shuffles.
 - Bank conflicts (in shared memory): data structure layout is important to avoid bank conflicts, e.g., Area of Structures (AoS) versus Structure of Arrays (SoA).
@@ -152,7 +152,7 @@ For a compute-bound kernel such as matrix multiply or convolution, one must map 
 
 By performing block-level data flow analysis, the Triton language can *automatically* unlock optimizations such as memory coalescing, thread swizzling, pre-fetching, vectorization, instruction selection (e.g. Tensor Core), shared memory allocation and synchronization, and more.
 
-Additionally, Triton provides a few other useful features, such as JIT compilation and auto-tuning support.
+Additionally, Triton provides a few other useful features, such as JIT compilation and auto-tuning support. In general, if you're not the hottest GPU expert on the block and want to get fast, custom kernels for your application, then this might be the right tool. 
 
 ### Weaknesses
 This is a performance *savant*'s worst nightmare: we ultimately become victim to a "black box" compiler that we can only hope will optimize our kernel. Worse yet, we don't really have a way out. In other words, there exist optimizations that aren't clearly accessible from the high-level abstraction of Triton. So, while Triton may be the right choice for quick iteration, it isn't necessarily the best choice to squeeze out every drop of performance, i.e., it makes an important trade-off between productivity and versatility.
