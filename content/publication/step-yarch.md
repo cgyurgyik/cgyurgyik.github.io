@@ -20,6 +20,7 @@ authors = [
 publication = "Young Architect Workshop"
 publication_short = "YArch"
 
+pdf = "/files/pubs/step-yarch.pdf"
 urls = [ ]
 type="workshop"
 +++
