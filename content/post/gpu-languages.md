@@ -213,7 +213,7 @@ The Triton language and compiler stack is currently open source under [OpenAI][t
 Writing fast GPU programs is hard. For a memory-bound kernel, one must consider, at a minimum, the following:
 - Memory coalescing (in global memory): thread access patterns are important to ensure we minimize the number of fetches.
 - Memory hierarchy (global $\rightarrow$ shared $\rightarrow$ registers). Using a lower-latency memory is better, but requires synchronization and low-level instructions such as intra-warp shuffles.
-- Bank conflicts (in shared memory): data structure layout is important to avoid bank conflicts, e.g., Area of Structures (AoS) versus Structure of Arrays (SoA).
+- Bank conflicts (in shared memory): data structure layout is important to avoid bank conflicts, e.g., Array of Structures (AoS) versus Structure of Arrays (SoA).
 
 For a compute-bound kernel such as matrix multiply or convolution, one must map instructions to Tensor Cores. This requires carefully choosing tile size, SM count, etc. Such optimizations are not always trivial; this can be illustrated by the number of NVIDIA Developer blog posts [[1][cuda-atom], [2][cuda-shmem], [3][cuda-xpose], [4][cuda-warp], [5][cuda-tc]].
 
