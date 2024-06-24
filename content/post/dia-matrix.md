@@ -1,10 +1,10 @@
 +++
-title = "A (Slight) Improvement to Compressed Diagonal Matrix"
+title = "A (slight) Improvement to Compressed Diagonal Matrix"
 date = 2024-06-24
 draft = false
 
 [extra] 
-summary = "..."
+summary = "less storage ⇒ better format"
 +++
 
 Let's say we want to compress a sparse diagonal (or symmetric matrix). 
