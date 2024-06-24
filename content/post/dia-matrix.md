@@ -60,7 +60,7 @@ array([6, 8, 8, 1, 2, 3, 4, 5])
 
 We've provided a mapping from its diagonal index to its offset in the data array. 
 Moreover, we can determine the end of the slice implicitly from the diagonal index. 
-Given an $N \times N$ matrix and a diagonal index $d_i$, the length is $N - \text{abs}(d_i)$. 
+Given an \(N \times N\) matrix and a diagonal index $d_i$, the length is $N - \text{abs}(d_i)$. 
 More generally, given a data array $AD$ and a offset mapping $LA$ for an $N \times N$ matrix, the diagonal at $d_i$ is bounded in $AD$ by:
 
 $$
