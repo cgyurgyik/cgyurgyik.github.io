@@ -67,7 +67,7 @@ wasted. What if, instead, we use a single dimension and provide offsets, i.e.,&l
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;We’ve provided a mapping from its diagonal index to its offset in the data array.
 Moreover, we can determine the end of the slice implicitly from the diagonal index.
-Given an (N \times N) matrix and a diagonal index $d_i$, the length is $N - \text{abs}(d_i)$.
+Given an $N \times N$ matrix and a diagonal index $d_i$, the length is $N - \text{abs}(d_i)$.
 More generally, given a data array $AD$ and a offset mapping $LA$ for an $N \times N$ matrix, the diagonal at $d_i$ is bounded in $AD$ by:&lt;&#x2F;p&gt;
 &lt;p&gt;$$
 \Bigl[LA[d_i], LA[d_i] + N - \text{abs}(d_i)\Bigr)
