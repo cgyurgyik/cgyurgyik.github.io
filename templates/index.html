@@ -67,11 +67,6 @@
 <!-- Blog Posts -->
 <section>
   <h2 id="posts">Posts
-    <sup>
-      <a class="unstyled-link" href="{{ get_url(path=" post/atom.xml") }}">
-        <i class="fas fa-rss"></i>
-      </a>
-    </sup>
   </h2>
   {% set news = get_section(path="post/_index.md") %}
   {% set items = config.extra.news_items %}
@@ -81,6 +76,23 @@
   <div class="more">
     <a href="/post">
       All Posts
+      <i class="fa fa-angle-double-right"></i>
+    </a>
+  </div>
+</section>
+
+<!-- Adventure Posts -->
+<section>
+  <h2 id="adventures">Adventures
+  </h2>
+  {% set news = get_section(path="adventure/_index.md") %}
+  {% set items = config.extra.news_items %}
+  {% for post in news.pages | sort(attribute="date") | reverse | slice(end=items) %}
+  {{ m::generate_post(post=post) }}
+  {% endfor %}
+  <div class="more">
+    <a href="/adventure">
+      All Adventures
       <i class="fa fa-angle-double-right"></i>
     </a>
   </div>
