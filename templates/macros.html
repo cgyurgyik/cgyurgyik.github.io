@@ -34,6 +34,25 @@
 </div>
 {% endmacro post %}
 
+{# Styling for Adventure #}
+{% macro generate_adventure(post) %}
+<div class="blurb">
+  <div class="date">{{ post.date | date(format="%b ’%y") }}</div>
+  <div class="description">
+    {% if post.extra.external %}
+    <a href="{{ post.extra.external | safe }}">
+      {% else %}
+      <a href="{{ post.permalink | safe }}">
+        {% endif %}
+        {{ post.title | safe }}
+      </a><br />
+      <div class="post-tease">
+        {{ post.extra.summary }}
+      </div>
+  </div>
+</div>
+{% endmacro post %}
+
 
 {# Styling for News items #}
 {% macro generate_news(post) %}

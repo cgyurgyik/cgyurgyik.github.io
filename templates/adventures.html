@@ -3,13 +3,13 @@
 
 {% block content %}
 <section>
-<h2>
-  {{ section.title }}
-</h2>
-<ul>
-  {% for page in section.pages %}
-  {{ m::generate_post(post=page) }}
-  {% endfor %}
-</ul>
+  <h2>
+    {{ section.title }}
+  </h2>
+  <ul>
+    {% for page in section.pages %}
+    {{ m::generate_adventure(post=page) }}
+    {% endfor %}
+  </ul>
 </section>
 {% endblock content %}
