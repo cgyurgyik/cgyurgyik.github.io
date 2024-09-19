@@ -1,7 +1,7 @@
 +++
 title = "Test"
 date = 2024-09-19
-draft = true
+draft = false
 
 [extra] 
 summary = "test"
