@@ -310,17 +310,13 @@ same optimization can be applied to symmetric matrices.&lt;&#x2F;p&gt;
 &lt;p&gt;This is a performance &lt;em&gt;savant&lt;&#x2F;em&gt;’s worst nightmare: we ultimately become victim to a “black box” compiler that we can only hope will optimize our kernel. Worse yet, we don’t really have a way out. In other words, there exist optimizations that aren’t clearly accessible from the high-level abstraction of Triton. So, while Triton may be the right choice for quick iteration, it isn’t necessarily the best choice to squeeze out every drop of performance, i.e., it makes an important trade-off between productivity and versatility.&lt;&#x2F;p&gt;
 &lt;p&gt;There is an alluring (yet slightly outdated
 &lt;span style=&quot;white-space:nowrap&quot;&gt;
-&lt;label for=&quot;sn-1&quot;
-       class=&quot;margin-toggle sidenote-number&quot;&gt;
-&lt;&#x2F;label&gt;
+       &lt;label for=&quot;sn-1&quot; class=&quot;margin-toggle sidenote-number&quot;&gt;
+       &lt;&#x2F;label&gt;
 &lt;&#x2F;span&gt;
-&lt;input type=&quot;checkbox&quot;
-       id=&quot;sn-1&quot;
-       class=&quot;margin-toggle&quot;&#x2F;&gt;
+&lt;input type=&quot;checkbox&quot; id=&quot;sn-1&quot; class=&quot;margin-toggle&quot; &#x2F;&gt;
 &lt;span class=&quot;sidenote&quot;&gt;
-Readers should be aware this was written when Triton 1.0 was released. I have run a few of these example kernels on Triton 2.1.0, and found they have improved since then, e.g., there is no longer unnecessary thread synchronizations in the reduction kernel. However, the post’s objective is still relevant: the Triton compiler is opaque.
-&lt;&#x2F;span&gt;
-) &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;fkong.tech&#x2F;posts&#x2F;2023-04-23-triton-cuda&#x2F;&quot;&gt;blog post&lt;&#x2F;a&gt; by a senior engineer at NVIDIA, who inspects the emitted code from the Triton compiler, and reverse engineers the PTX back to CUDA (with the assistance of LLMs, no less).&lt;&#x2F;p&gt;
+       Readers should be aware this was written when Triton 1.0 was released. I have run a few of these example kernels on Triton 2.1.0, and found they have improved since then, e.g., there is no longer unnecessary thread synchronizations in the reduction kernel. However, the post’s objective is still relevant: the Triton compiler is opaque.
+&lt;&#x2F;span&gt;) &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;fkong.tech&#x2F;posts&#x2F;2023-04-23-triton-cuda&#x2F;&quot;&gt;blog post&lt;&#x2F;a&gt; by a senior engineer at NVIDIA, who inspects the emitted code from the Triton compiler, and reverse engineers the PTX back to CUDA (with the assistance of LLMs, no less).&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;takeaways&quot;&gt;Takeaways&lt;&#x2F;h2&gt;
 &lt;ul&gt;
 &lt;li&gt;GPU languages should always have performance as one of their north stars. If the user didn’t want a fast program, then they could just use a CPU.&lt;&#x2F;li&gt;
