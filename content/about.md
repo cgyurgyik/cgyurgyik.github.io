@@ -6,7 +6,7 @@ Christophe Gyurgyik (or simply, Chris) is a PhD candidate at Stanford University
 
 Previously, he worked at Google on the [XLA][] (Accelerated Linear Algebra) compiler and the [TPU][] (Tensor Processing Unit). Prior to industry, his research focused on [Calyx][], a compiler infrastructure for languages that target hardware accelerators and [CIRCT][], an experimental compiler to improve hardware design tools. This work was completed under Cornell University's [CAPRA][], spearheaded by [Rachit Nigam][rnigam] and [Adrian Sampson][asampson].
 
-In his free time, Christophe enjoys climbing[mountain-project], reading, and surfing.
+In his free time, Christophe enjoys [climbing][mountain-project], reading, and surfing.
 
 [fkjolstad]: https://fredrikbk.com/
 [asampson]: https://www.cs.cornell.edu/~asampson/
