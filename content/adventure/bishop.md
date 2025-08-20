@@ -7,7 +7,7 @@ draft = false
 summary = "A retrospective inlet on friendship"
 +++
 
-I spent the past week in Bishop, California: the high-ball bouldering Mecca. Climbing offers refuge from the prosaic demands of life. At times, it compels me to allocate every iota of my attention to a single, tangible objective; all peripheral worries vanish as I enter the *flow state*.
+I spent the past week in Bishop, California: the high-ball bouldering Mecca. Climbing offers refuge from the prosaic demands of life. It compels me to allocate every iota of my attention to a single, tangible objective and suddenly peripheral concerns vanish. Frankly, few things can do this for me.
 
 Yet, when I savor these moments, my nostalgia gravitates toward the friendships that prospered from such adventures. Agustín Letelier and I met during undergraduate studies, celebrating our small victories in climbing which promptly developed into genuine camaraderie. Eli Yale, both a friend and a climbing mentor, helped me overcome many of my self-perceived limitations. I could write endlessly about Agustín’s doggedness and Eli’s *Panglossian* spirit, but it isn’t the thesis of this piece.
 
