@@ -19,7 +19,7 @@ authors = [
 
 # Publication name and optional abbreviated version.
 publication = "An online archive for scientific preprints"
-publication_short = "ArXiV"
+publication_short = "arXiv"
 pub_link = ""
 pdf = "/files/pubs/bonsai-arxiv.pdf"
 urls = [
