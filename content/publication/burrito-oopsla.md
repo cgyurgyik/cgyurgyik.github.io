@@ -22,7 +22,7 @@ publication_short = "OOPSLA"
 pdf = "/files/pubs/burrito-oopsla.pdf"
 urls = [
   { name = "Code", url = "https://github.com/rootjalex/burrito-artifact" },
-  { name "Journal", url = "https://dl.acm.org/doi/abs/10.1145/3689752" }
+  { name = "Journal", url = "https://dl.acm.org/doi/abs/10.1145/3689752" }
 ]
 type="conf"
 +++

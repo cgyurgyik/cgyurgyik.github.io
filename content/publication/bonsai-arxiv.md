@@ -23,7 +23,7 @@ publication_short = "ArXiV"
 pub_link = ""
 pdf = "/files/pubs/bonsai-arxiv.pdf"
 urls = [
-  { name = "Journal", url = "https://arxiv.org/abs/2511.15000"}
+  { name = "Arxiv", url = "https://arxiv.org/abs/2511.15000"}
 ]
 type="conf"
 +++
