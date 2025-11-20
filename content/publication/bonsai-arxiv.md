@@ -22,5 +22,6 @@ publication = "An online archive for scientific preprints"
 publication_short = "ArXiV"
 
 pdf = "/files/pubs/bonsai-arxiv.pdf"
+urls = []
 type="conf"
 +++

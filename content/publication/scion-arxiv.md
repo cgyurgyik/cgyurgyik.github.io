@@ -18,5 +18,6 @@ publication = "An online archive for scientific preprints"
 publication_short = "ArXiV"
 
 pdf = "/files/pubs/scion-arxiv.pdf"
+urls = []
 type="conf"
 +++
