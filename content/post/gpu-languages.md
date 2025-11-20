@@ -1,7 +1,7 @@
 +++
-title = "(draft) The GPU Programming Language Triangle"
+title = "The GPU Programming Language Triangle"
 date = 2024-04-11
-draft = false
+draft = true
 
 [extra] 
 summary = "Subjective categorization of GPU languages."
