@@ -339,6 +339,7 @@ dt {
 
 .publication-highlight {
   color: black;
+  font-weight: bold;
 }
 
 .publication-link>a {
