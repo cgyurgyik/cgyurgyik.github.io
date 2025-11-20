@@ -19,10 +19,10 @@ authors = [
 # Publication name and optional abbreviated version.
 publication = "The ACM SIGPLAN International Conference on Systems, Programming, Languages and Applications"
 publication_short = "OOPSLA"
-
 pdf = "/files/pubs/burrito-oopsla.pdf"
 urls = [
-  { name = "Code", url = "https://github.com/rootjalex/burrito-artifact" }
+  { name = "Code", url = "https://github.com/rootjalex/burrito-artifact" },
+  { name "Journal", url = "https://dl.acm.org/doi/abs/10.1145/3689752" }
 ]
 type="conf"
 +++

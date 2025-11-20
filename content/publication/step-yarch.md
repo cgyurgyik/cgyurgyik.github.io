@@ -21,6 +21,6 @@ publication = "Young Architect Workshop"
 publication_short = "YArch"
 
 pdf = "/files/pubs/step-yarch.pdf"
-urls = [ ]
+urls = [ { name = "Workshop", url = "https://www.cs.cmu.edu/~yarch2024/" } ]
 type="workshop"
 +++

@@ -18,6 +18,6 @@ publication = "Workshop on Open-Source EDA Technology"
 publication_short = "WOSET"
 
 pdf = "/files/pubs/calyx-woset.pdf"
-urls = [ ]
+urls = [ { name = "Workshop", url = "https://woset-workshop.github.io/WOSET2021.html" } ]
 type="workshop"
 +++

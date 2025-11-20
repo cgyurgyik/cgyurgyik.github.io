@@ -20,8 +20,10 @@ authors = [
 # Publication name and optional abbreviated version.
 publication = "An online archive for scientific preprints"
 publication_short = "ArXiV"
-
+pub_link = ""
 pdf = "/files/pubs/bonsai-arxiv.pdf"
-urls = []
+urls = [
+  { name = "Journal", url = "https://arxiv.org/abs/2511.15000"}
+]
 type="conf"
 +++

@@ -18,6 +18,8 @@ publication = "An online archive for scientific preprints"
 publication_short = "ArXiV"
 
 pdf = "/files/pubs/scion-arxiv.pdf"
-urls = []
+urls = [
+  { name = "Arxiv", url = "https://arxiv.org/abs/2511.15028"}
+]
 type="conf"
 +++

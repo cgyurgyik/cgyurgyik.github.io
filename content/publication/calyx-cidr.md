@@ -22,7 +22,8 @@ award = "Distinguished Artifact Award"
 pdf = "/files/pubs/calyx-cidr.pdf"
 urls = [
   { name = "Website", url = "https://docs.calyxir.org/running-calyx/interpreter.html" },
-  { name = "Code", url = "https://github.com/cucapra/calyx" }
+  { name = "Code", url = "https://github.com/cucapra/calyx" },
+  { name = "Journal", url = "https://dl.acm.org/doi/10.1145/3575693.3575717" }
 ]
 type="conf"
 +++
