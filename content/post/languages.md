@@ -28,7 +28,7 @@ foo x = x + 1
 
 These choices are semantically invisible but syntactically required for performance reasons. Scheduling languages like [Halide](https://dl.acm.org/doi/10.1145/2491956.2462176) and [TACO](https://dl.acm.org/doi/10.1145/3133901) take a different path:
 
-> (2b) Implementation details that don't affect program correctness are confined to a separate language.
+> (3) Implementation details that don't affect program correctness are confined to a separate language.
 
 In Halide, you write the algorithm once as a pure functional description, and then separately write a *schedule* specifying optimizations such as tiling and parallelism. The schedule does not change the program semantics, only how the compute is performed. This separation is enforced syntactically.
 
@@ -42,5 +42,5 @@ f.parallel(x);
 
 Why not just achieve (1) with a sufficiently clever compiler? Because determining which details "don't affect correctness" requires deciding program equivalence (in general, [Rice's theorem](https://en.wikipedia.org/wiki/Rice%27s_theorem) forbids this). Scheduling languages today sidestep the problem for a small domain. They don't ask the compiler to discover semantics-preserving transformations, they provide a language for the programmer to express them, while [guaranteeing by construction](https://dl.acm.org/doi/10.1145/3519939.3523446) that only semantics-preserving transformations are expressible.
 
-There's more to say about scheduling languages (e.g., encapsulation benefits, ergonomic costs), but that's for another post. For now, (1) is the ideal, (2b) is the pragmatic alternative when optimal performance is desired.
+There's more to say about scheduling languages (e.g., encapsulation benefits, ergonomic costs), but that's for another post. For now, (1) is the ideal, (3) is the pragmatic alternative when optimal performance is desired.
 
