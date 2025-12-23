@@ -41,7 +41,7 @@
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;These choices are semantically invisible but syntactically required for performance reasons. Scheduling languages like &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.1145&#x2F;2491956.2462176&quot;&gt;Halide&lt;&#x2F;a&gt; and &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.1145&#x2F;3133901&quot;&gt;TACO&lt;&#x2F;a&gt; take a different path:&lt;&#x2F;p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;(2b) Implementation details that don’t affect program correctness are confined to a separate language.&lt;&#x2F;p&gt;
+&lt;p&gt;(3) Implementation details that don’t affect program correctness are confined to a separate language.&lt;&#x2F;p&gt;
 &lt;&#x2F;blockquote&gt;
 &lt;p&gt;In Halide, you write the algorithm once as a pure functional description, and then separately write a &lt;em&gt;schedule&lt;&#x2F;em&gt; specifying optimizations such as tiling and parallelism. The schedule does not change the program semantics, only how the compute is performed. This separation is enforced syntactically.&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;&#x2F;&#x2F; algorithm
@@ -51,7 +51,7 @@
 &lt;&#x2F;span&gt;&lt;span&gt;f.parallel(x);
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;Why not just achieve (1) with a sufficiently clever compiler? Because determining which details “don’t affect correctness” requires deciding program equivalence (in general, &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Rice%27s_theorem&quot;&gt;Rice’s theorem&lt;&#x2F;a&gt; forbids this). Scheduling languages today sidestep the problem for a small domain. They don’t ask the compiler to discover semantics-preserving transformations, they provide a language for the programmer to express them, while &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.1145&#x2F;3519939.3523446&quot;&gt;guaranteeing by construction&lt;&#x2F;a&gt; that only semantics-preserving transformations are expressible.&lt;&#x2F;p&gt;
-&lt;p&gt;There’s more to say about scheduling languages (e.g., encapsulation benefits, ergonomic costs), but that’s for another post. For now, (1) is the ideal, (2b) is the pragmatic alternative when optimal performance is desired.&lt;&#x2F;p&gt;
+&lt;p&gt;There’s more to say about scheduling languages (e.g., encapsulation benefits, ergonomic costs), but that’s for another post. For now, (1) is the ideal, (3) is the pragmatic alternative when optimal performance is desired.&lt;&#x2F;p&gt;
 </content>
         
     </entry>

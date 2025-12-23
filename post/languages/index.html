@@ -80,7 +80,7 @@ What Hoare wants and Rice forbids
 </span></code></pre>
 <p>These choices are semantically invisible but syntactically required for performance reasons. Scheduling languages like <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/2491956.2462176">Halide</a> and <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/3133901">TACO</a> take a different path:</p>
 <blockquote>
-<p>(2b) Implementation details that don’t affect program correctness are confined to a separate language.</p>
+<p>(3) Implementation details that don’t affect program correctness are confined to a separate language.</p>
 </blockquote>
 <p>In Halide, you write the algorithm once as a pure functional description, and then separately write a <em>schedule</em> specifying optimizations such as tiling and parallelism. The schedule does not change the program semantics, only how the compute is performed. This separation is enforced syntactically.</p>
 <pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>// algorithm
@@ -90,7 +90,7 @@ What Hoare wants and Rice forbids
 </span><span>f.parallel(x);
 </span></code></pre>
 <p>Why not just achieve (1) with a sufficiently clever compiler? Because determining which details “don’t affect correctness” requires deciding program equivalence (in general, <a rel="noopener nofollow noreferrer" target="_blank" href="https://en.wikipedia.org/wiki/Rice%27s_theorem">Rice’s theorem</a> forbids this). Scheduling languages today sidestep the problem for a small domain. They don’t ask the compiler to discover semantics-preserving transformations, they provide a language for the programmer to express them, while <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/3519939.3523446">guaranteeing by construction</a> that only semantics-preserving transformations are expressible.</p>
-<p>There’s more to say about scheduling languages (e.g., encapsulation benefits, ergonomic costs), but that’s for another post. For now, (1) is the ideal, (2b) is the pragmatic alternative when optimal performance is desired.</p>
+<p>There’s more to say about scheduling languages (e.g., encapsulation benefits, ergonomic costs), but that’s for another post. For now, (1) is the ideal, (3) is the pragmatic alternative when optimal performance is desired.</p>
 
 </div>
 
