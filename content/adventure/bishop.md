@@ -7,13 +7,13 @@ draft = false
 summary = "A retrospective inlet on friendship"
 +++
 
-I spent the past week in Bishop, California: the high-ball bouldering Mecca. Climbing offers refuge from the prosaic demands of life. It compels me to allocate every iota of my attention to a single, tangible objective and suddenly peripheral concerns vanish. Frankly, few things can do this for me.
+I spent the past week in Bishop, California: the high-ball bouldering Mecca. Climbing offers refuge from the prosaic demands of life. It compels me to allocate every iota of my attention to a single, tangible objective. Frankly, few things can do this for me.
 
 Yet, when I savor these moments, my nostalgia gravitates toward the friendships that prospered from such adventures. Agustín Letelier and I met during undergraduate studies, celebrating our small victories in climbing which promptly developed into genuine camaraderie. Eli Yale, both a friend and a climbing mentor, helped me overcome many of my self-perceived limitations. I could write endlessly about Agustín’s doggedness and Eli’s *Panglossian* spirit, but it isn’t the thesis of this piece.
 
 Rather, this week was a reminder of how vital it is share one’s passions with others. Friendships are glued together by common life pursuits, strengthened by concerted effort, and refined over time. No achievement in my life holds greater significance to me than the relationships I have forged along the way. Thank you to all my friends, both distant and close.
 
-<p style="font-size:10px"><b>In honor of James “Jim” Mase, a remarkable friend for whom I wish I could've done more. Semper Fidelis.</b></p>
+<p style="font-size:10px"><b>In honor of James “Jim” Mase, a remarkable friend for whom I wish I could've done more.</b></p>
 
 <figure>
 <img src="/files/images/bishop-2024/the-four.png" style="border: 1px solid black; margin: 0;" width="100%"> 
