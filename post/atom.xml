@@ -22,7 +22,7 @@
         <link rel="alternate" type="text/html" href="https://cgyurgyik.github.io/post/languages/"/>
         <id>https://cgyurgyik.github.io/post/languages/</id>
         
-        <content type="html" xml:base="https://cgyurgyik.github.io/post/languages/">&lt;p&gt;C.A.R. Hoare’s work &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.5555&#x2F;63445.C1104369&quot;&gt;“Recursive data structures”&lt;&#x2F;a&gt; motivates a simple law that good language design should abide by:&lt;&#x2F;p&gt;
+        <content type="html" xml:base="https://cgyurgyik.github.io/post/languages/">&lt;p&gt;C.A.R. Hoare’s work &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.5555&#x2F;63445.C1104369&quot;&gt;“Recursive data structures”&lt;&#x2F;a&gt; motivates a simple rule that good language design should abide by:&lt;&#x2F;p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;(1) Implementation details that don’t affect program correctness are syntactically &lt;em&gt;inexpressible&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
 &lt;&#x2F;blockquote&gt;
@@ -30,7 +30,7 @@
 &lt;blockquote&gt;
 &lt;p&gt;(2a) Implementation details that don’t affect program correctness are syntactically &lt;em&gt;expressible&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
 &lt;&#x2F;blockquote&gt;
-&lt;p&gt;C++ is the obvious case, but even Haskell qualifies. You make explicit decisions about memory representation:&lt;&#x2F;p&gt;
+&lt;p&gt;C++ is the obvious case, but even &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.5555&#x2F;645420.652528&quot;&gt;Haskell qualifies&lt;&#x2F;a&gt;. You make explicit decisions about memory representation:&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;haskell&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-haskell &quot;&gt;&lt;code class=&quot;language-haskell&quot; data-lang=&quot;haskell&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;-- unboxed (raw machine integer)
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;foo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;:: Int&lt;&#x2F;span&gt;&lt;span&gt;# &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;-&amp;gt; Int&lt;&#x2F;span&gt;&lt;span&gt;#
 &lt;&#x2F;span&gt;&lt;span&gt;foo x = x +# &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;#

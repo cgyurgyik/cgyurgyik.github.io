@@ -61,7 +61,7 @@ What Hoare wants and Rice forbids
 </div>
 
 <div class="post">
-<p>C.A.R. Hoare’s work <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.5555/63445.C1104369">“Recursive data structures”</a> motivates a simple law that good language design should abide by:</p>
+<p>C.A.R. Hoare’s work <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.5555/63445.C1104369">“Recursive data structures”</a> motivates a simple rule that good language design should abide by:</p>
 <blockquote>
 <p>(1) Implementation details that don’t affect program correctness are syntactically <em>inexpressible</em>.</p>
 </blockquote>
@@ -69,7 +69,7 @@ What Hoare wants and Rice forbids
 <blockquote>
 <p>(2a) Implementation details that don’t affect program correctness are syntactically <em>expressible</em>.</p>
 </blockquote>
-<p>C++ is the obvious case, but even Haskell qualifies. You make explicit decisions about memory representation:</p>
+<p>C++ is the obvious case, but even <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.5555/645420.652528">Haskell qualifies</a>. You make explicit decisions about memory representation:</p>
 <pre data-lang="haskell" style="background-color:#2b303b;color:#c0c5ce;" class="language-haskell "><code class="language-haskell" data-lang="haskell"><span style="color:#65737e;">-- unboxed (raw machine integer)
 </span><span style="color:#8fa1b3;">foo </span><span style="color:#b48ead;">:: Int</span><span># </span><span style="color:#b48ead;">-&gt; Int</span><span>#
 </span><span>foo x = x +# </span><span style="color:#d08770;">1</span><span>#
