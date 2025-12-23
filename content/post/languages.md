@@ -6,7 +6,7 @@ draft = false
 summary = "What Hoare wants and Rice forbids"
 +++
 
-C.A.R. Hoare's work ["Recursive data structures"](https://dl.acm.org/doi/10.5555/63445.C1104369) motivates a simple law that good language design should abide by:
+C.A.R. Hoare's work ["Recursive data structures"](https://dl.acm.org/doi/10.5555/63445.C1104369) motivates a simple rule that good language design should abide by:
 
 > (1) Implementation details that don't affect program correctness are syntactically *inexpressible*.
 
@@ -14,7 +14,7 @@ Codd's [relational model](https://www.seas.upenn.edu/~zives/03f/cis550/codd.pdf)
 
 > (2a) Implementation details that don't affect program correctness are syntactically *expressible*. 
 
-C++ is the obvious case, but even Haskell qualifies. You make explicit decisions about memory representation:
+C++ is the obvious case, but even [Haskell qualifies](https://dl.acm.org/doi/10.5555/645420.652528). You make explicit decisions about memory representation:
 
 ```haskell
 -- unboxed (raw machine integer)
