@@ -19,10 +19,10 @@
           </name>
         </author>
         
-        <link rel="alternate" type="text/html" href="https://cgyurgyik.github.io/post/languages/"/>
-        <id>https://cgyurgyik.github.io/post/languages/</id>
+        <link rel="alternate" type="text/html" href="https://cgyurgyik.github.io/post/scheduling-languages-exist/"/>
+        <id>https://cgyurgyik.github.io/post/scheduling-languages-exist/</id>
         
-        <content type="html" xml:base="https://cgyurgyik.github.io/post/languages/">&lt;p&gt;C.A.R. Hoare’s work &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.5555&#x2F;63445.C1104369&quot;&gt;“Recursive data structures”&lt;&#x2F;a&gt; motivates a simple rule that good language design should abide by:&lt;&#x2F;p&gt;
+        <content type="html" xml:base="https://cgyurgyik.github.io/post/scheduling-languages-exist/">&lt;p&gt;C.A.R. Hoare’s work &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.5555&#x2F;63445.C1104369&quot;&gt;“Recursive data structures”&lt;&#x2F;a&gt; motivates a simple rule that good language design should abide by:&lt;&#x2F;p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;(1) Implementation details that don’t affect program correctness are syntactically &lt;em&gt;inexpressible&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
 &lt;&#x2F;blockquote&gt;
