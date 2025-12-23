@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title> - All Posts</title>
+    <link rel="self" type="application/atom+xml" href="https://cgyurgyik.github.io/post/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://cgyurgyik.github.io/post/"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-12-23T00:00:00+00:00</updated>
+    <id>https://cgyurgyik.github.io/post/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Why scheduling languages exist</title>
+        <published>2025-12-23T00:00:00+00:00</published>
+        <updated>2025-12-23T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://cgyurgyik.github.io/post/languages/"/>
+        <id>https://cgyurgyik.github.io/post/languages/</id>
+        
+        <content type="html" xml:base="https://cgyurgyik.github.io/post/languages/">&lt;p&gt;C.A.R. Hoare’s work &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.5555&#x2F;63445.C1104369&quot;&gt;“Recursive data structures”&lt;&#x2F;a&gt; motivates a simple law that good language design should abide by:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(1) Implementation details that don’t affect program correctness are syntactically &lt;em&gt;inexpressible&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;Codd’s &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;www.seas.upenn.edu&#x2F;~zives&#x2F;03f&#x2F;cis550&#x2F;codd.pdf&quot;&gt;relational model&lt;&#x2F;a&gt; attempts to realize this: you declare &lt;em&gt;what&lt;&#x2F;em&gt; you want (projections, joins) and the implementation (e.g., join order) is determined by the optimizer. In practice, programmers still reason about implementation details, shaping queries to optimize well. Programming languages generally abandon (1) entirely, giving us:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(2a) Implementation details that don’t affect program correctness are syntactically &lt;em&gt;expressible&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;C++ is the obvious case, but even Haskell qualifies. You make explicit decisions about memory representation:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;haskell&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-haskell &quot;&gt;&lt;code class=&quot;language-haskell&quot; data-lang=&quot;haskell&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;-- unboxed (raw machine integer)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;foo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;:: Int&lt;&#x2F;span&gt;&lt;span&gt;# &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;-&amp;gt; Int&lt;&#x2F;span&gt;&lt;span&gt;#
+&lt;&#x2F;span&gt;&lt;span&gt;foo x = x +# &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;#
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;-- boxed (heap-allocated, thunk-able)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;foo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;:: Int -&amp;gt; Int
+&lt;&#x2F;span&gt;&lt;span&gt;foo x = x + &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;These choices are semantically invisible but syntactically required for performance reasons. Scheduling languages like &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.1145&#x2F;2491956.2462176&quot;&gt;Halide&lt;&#x2F;a&gt; and &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.1145&#x2F;3133901&quot;&gt;TACO&lt;&#x2F;a&gt; take a different path:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(2b) Implementation details that don’t affect program correctness are confined to a separate language.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;In Halide, you write the algorithm once as a pure functional description, and then separately write a &lt;em&gt;schedule&lt;&#x2F;em&gt; specifying optimizations such as tiling and parallelism. The schedule does not change the program semantics, only how the compute is performed. This separation is enforced syntactically.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;&#x2F;&#x2F; algorithm
+&lt;&#x2F;span&gt;&lt;span&gt;f(x) = a(x) * b(x);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;&#x2F; schedule
+&lt;&#x2F;span&gt;&lt;span&gt;f.parallel(x);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Why not just achieve (1) with a sufficiently clever compiler? Because determining which details “don’t affect correctness” requires deciding program equivalence (in general, &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Rice%27s_theorem&quot;&gt;Rice’s theorem&lt;&#x2F;a&gt; forbids this). Scheduling languages today sidestep the problem for a small domain. They don’t ask the compiler to discover semantics-preserving transformations, they provide a language for the programmer to express them, while &lt;a rel=&quot;noopener nofollow noreferrer&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;10.1145&#x2F;3519939.3523446&quot;&gt;guaranteeing by construction&lt;&#x2F;a&gt; that only semantics-preserving transformations are expressible.&lt;&#x2F;p&gt;
+&lt;p&gt;There’s more to say about scheduling languages (e.g., encapsulation benefits, ergonomic costs), but that’s for another post. For now, (1) is the ideal, (2b) is the pragmatic alternative when optimal performance is desired.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>

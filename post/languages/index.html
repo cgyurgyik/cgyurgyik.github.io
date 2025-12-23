@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="Christophe Gyurgyik">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Christophe Gyurgyik | PhD Candidate, Stanford University</title>
+
+  <link rel="icon" href="/flower.svg" type="image/svg+xml">
+
+  <link rel="stylesheet" href=https://cgyurgyik.github.io/css/normalize.css>
+  <link rel="stylesheet" href=https://cgyurgyik.github.io/css/default.css>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.1/css/academicons.min.css"
+    integrity="sha512-b1ASx0WHgVFL5ZQhTgiPWX+68KjS38Jk87jg7pe+qC7q9YkEtFq0z7xCglv7qGIs/68d3mAp+StfC8WKC5SSAg=="
+    crossorigin="anonymous" />
+
+  
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="https://cgyurgyik.github.io/ post/atom.xml">
+  
+
+  <script type="text/x-mathjax-config">
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ["\\(", "\\)"]],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true,
+      }
+    }
+  </script>
+
+  <script type="text/javascript" id="MathJax-script" defer
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+</head>
+
+<body>
+  <header>
+    <h1 class="name"><a class="unstyled-link" href="/">Christophe Gyurgyik</a></h1>
+    <nav>
+      <a class="unstyled-link nav-item" href="/#publications">Publications</a>
+      <a class="unstyled-link nav-item" href="/#posts">Posts</a>
+      <a class="unstyled-link nav-item" href="/files/resume.pdf">CV</a>
+      <a class="unstyled-link nav-item" href="/#adventures">Adventures</a>
+    </nav>
+  </header>
+  <section class="section">
+    <div class="container">
+      
+<div class="post-header">
+<h1 class="title">
+  Why scheduling languages exist
+</h1>
+<div class="date">
+What Hoare wants and Rice forbids
+</div>
+<p class="date">December 23, 2025</p>
+</div>
+
+<div class="post">
+<p>C.A.R. Hoare’s work <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.5555/63445.C1104369">“Recursive data structures”</a> motivates a simple law that good language design should abide by:</p>
+<blockquote>
+<p>(1) Implementation details that don’t affect program correctness are syntactically <em>inexpressible</em>.</p>
+</blockquote>
+<p>Codd’s <a rel="noopener nofollow noreferrer" target="_blank" href="https://www.seas.upenn.edu/~zives/03f/cis550/codd.pdf">relational model</a> attempts to realize this: you declare <em>what</em> you want (projections, joins) and the implementation (e.g., join order) is determined by the optimizer. In practice, programmers still reason about implementation details, shaping queries to optimize well. Programming languages generally abandon (1) entirely, giving us:</p>
+<blockquote>
+<p>(2a) Implementation details that don’t affect program correctness are syntactically <em>expressible</em>.</p>
+</blockquote>
+<p>C++ is the obvious case, but even Haskell qualifies. You make explicit decisions about memory representation:</p>
+<pre data-lang="haskell" style="background-color:#2b303b;color:#c0c5ce;" class="language-haskell "><code class="language-haskell" data-lang="haskell"><span style="color:#65737e;">-- unboxed (raw machine integer)
+</span><span style="color:#8fa1b3;">foo </span><span style="color:#b48ead;">:: Int</span><span># </span><span style="color:#b48ead;">-&gt; Int</span><span>#
+</span><span>foo x = x +# </span><span style="color:#d08770;">1</span><span>#
+</span><span>
+</span><span style="color:#65737e;">-- boxed (heap-allocated, thunk-able)
+</span><span style="color:#8fa1b3;">foo </span><span style="color:#b48ead;">:: Int -&gt; Int
+</span><span>foo x = x + </span><span style="color:#d08770;">1
+</span></code></pre>
+<p>These choices are semantically invisible but syntactically required for performance reasons. Scheduling languages like <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/2491956.2462176">Halide</a> and <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/3133901">TACO</a> take a different path:</p>
+<blockquote>
+<p>(2b) Implementation details that don’t affect program correctness are confined to a separate language.</p>
+</blockquote>
+<p>In Halide, you write the algorithm once as a pure functional description, and then separately write a <em>schedule</em> specifying optimizations such as tiling and parallelism. The schedule does not change the program semantics, only how the compute is performed. This separation is enforced syntactically.</p>
+<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>// algorithm
+</span><span>f(x) = a(x) * b(x);
+</span><span>
+</span><span>// schedule
+</span><span>f.parallel(x);
+</span></code></pre>
+<p>Why not just achieve (1) with a sufficiently clever compiler? Because determining which details “don’t affect correctness” requires deciding program equivalence (in general, <a rel="noopener nofollow noreferrer" target="_blank" href="https://en.wikipedia.org/wiki/Rice%27s_theorem">Rice’s theorem</a> forbids this). Scheduling languages today sidestep the problem for a small domain. They don’t ask the compiler to discover semantics-preserving transformations, they provide a language for the programmer to express them, while <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/3519939.3523446">guaranteeing by construction</a> that only semantics-preserving transformations are expressible.</p>
+<p>There’s more to say about scheduling languages (e.g., encapsulation benefits, ergonomic costs), but that’s for another post. For now, (1) is the ideal, (2b) is the pragmatic alternative when optimal performance is desired.</p>
+
+</div>
+
+
+    </div>
+  </section>
+
+  <footer>
+    &copy;&nbsp;2025 Christophe Gyurgyik &middot; Built using <a href="https://www.getzola.org/">Zola</a> &middot;
+    Adapted from <a href="https://www.rachitnigam.com/">Rachit Nigam</a>
+  </footer>
+
+</body>
+
+</html>
