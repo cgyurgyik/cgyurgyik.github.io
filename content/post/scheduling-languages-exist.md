@@ -53,5 +53,5 @@ Why not just achieve (1) with a sufficiently clever compiler? Because determinin
 So, why does (3) exist? (1) provides clarity but surrenders performance control, and (2) provides control at the cost of entanglement. Programmers in performance-critical domains want both semantic clarity and performance control. Scheduling languages deliver: reason about correctness in one language, optimize in another. This separation is *one* motivation for scheduling languages; there's more to say (e.g., encapsulation benefits, ergonomic costs), but that's for another post.
 
 
-<p style="font-size:10px"><b>Thank you to AJ Root and Rohan Yadav for their valuable feedback.</b></p>
+<p style="font-size:10px"><b>Thank you to [AJ Root](https://ajroot.pl/) and [Rohan Yadav](https://rohany.github.io/) for their valuable feedback.</b></p>
 
