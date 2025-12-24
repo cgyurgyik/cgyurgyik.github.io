@@ -11,7 +11,7 @@ I spent the past week in Bishop, California: the high-ball bouldering Mecca. Cli
 
 Yet, when I savor these moments, my nostalgia gravitates toward the friendships that prospered from such adventures. Agustín Letelier and I met during undergraduate studies, celebrating our small victories in climbing which promptly developed into genuine camaraderie. Eli Yale, both a friend and a climbing mentor, helped me overcome many of my self-perceived limitations. I could write endlessly about Agustín’s doggedness and Eli’s *Panglossian* spirit, but it isn’t the thesis of this piece.
 
-Rather, this week was a reminder of how vital it is share one’s passions with others. Friendships are glued together by common life pursuits, strengthened by concerted effort, and refined over time. No achievement in my life holds greater significance to me than the relationships I have forged along the way. Thank you to all my friends, both distant and close.
+Rather, this week was a reminder of how vital it is to share one’s passions with others. Friendships are glued together by common life pursuits, strengthened by concerted effort, and refined over time. No achievement in my life holds greater significance to me than the relationships I have forged along the way. Thank you to all my friends, both distant and close.
 
 <p style="font-size:10px"><b>In honor of James “Jim” Mase, a remarkable friend for whom I wish I could've done more.</b></p>
 
@@ -37,10 +37,10 @@ Rather, this week was a reminder of how vital it is share one’s passions with 
 
 <figure>
 <img src="/files/images/bishop-2024/jordyn.png" style="border: 1px solid black; margin: 0;" width="100%"> 
-<figcaption style="margin-top: 4px;">Jordyn working a hard traverse problem on the Smooth Shrimp boulder.</figcaption>
+<figcaption style="margin-top: 4px;">Jordyn working a problem on Smooth Shrimp boulder.</figcaption>
 </figure>
 
 <figure>
 <img src="/files/images/bishop-2024/john-bachar.png" style="border: 1px solid black; margin: 0;" width="100%"> 
-<figcaption style="margin-top: 4px;">The John Bachar Memorial Problem, a truly engaging problem with a dubious fall zone.</figcaption>
+<figcaption style="margin-top: 4px;">The John Bachar Memorial Problem, a truly engaging problem.</figcaption>
 </figure>

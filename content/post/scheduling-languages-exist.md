@@ -8,31 +8,37 @@ summary = "What Hoare wants and Rice forbids"
 
 C.A.R. Hoare's work ["Recursive data structures"](https://dl.acm.org/doi/10.5555/63445.C1104369) motivates a simple rule that good language design should abide by:
 
-> (1) Implementation details that don't affect program correctness are syntactically *inexpressible*.
+> (1) Implementation details that don't affect program correctness should be syntactically *inexpressible*.
 
-Codd's [relational model](https://www.seas.upenn.edu/~zives/03f/cis550/codd.pdf) attempts to realize this: you declare *what* you want (projections, joins) and the implementation (e.g., join order) is determined by the optimizer. In practice, programmers still reason about implementation details, shaping queries to optimize well. Programming languages generally abandon (1) entirely, giving us:
+Codd's [relational model](https://www.seas.upenn.edu/~zives/03f/cis550/codd.pdf) attempts to realize this: you declare *what* you want and the implementation is determined by the query optimizer. For example,
 
-> (2a) Implementation details that don't affect program correctness are syntactically *expressible*. 
+```sql
+SELECT age FROM users WHERE age > 21
+```
 
-C++ is the obvious case, but even [Haskell qualifies](https://dl.acm.org/doi/10.5555/645420.652528). You make explicit decisions about memory representation:
+The declarative language specifies nothing about index usage, join order, or memory allocation. In practice, relational database programmers still reason about implementation details, shaping queries to optimize well. Most programming languages abandon (1) entirely, giving us:
+
+> (2) Implementation details that don't affect program correctness are syntactically *expressible*. 
+
+Imperative languages like C are the obvious case, but even [Haskell qualifies](https://dl.acm.org/doi/10.5555/645420.652528), where you make explicit decisions about memory representation:
 
 ```haskell
--- unboxed (raw machine integer)
-foo :: Int# -> Int#
-foo x = x +# 1#
-
 -- boxed (heap-allocated, thunk-able)
 foo :: Int -> Int
 foo x = x + 1
+
+-- unboxed (raw machine integer)
+foo :: Int# -> Int#
+foo x = x +# 1#
 ```
 
-These choices are semantically invisible but syntactically required for performance reasons. Scheduling languages like [Halide](https://dl.acm.org/doi/10.1145/2491956.2462176) and [TACO](https://dl.acm.org/doi/10.1145/3133901) take a different path:
+Both snippets add `1` to the variable `x` with different data layouts. The choices are semantically invisible but syntactically different, and the latter exists solely for performance reasons. Scheduling languages like [Halide](https://dl.acm.org/doi/10.1145/2491956.2462176) and [TACO](https://dl.acm.org/doi/10.1145/3133901) take a different path:
 
 > (3) Implementation details that don't affect program correctness are confined to a separate language.
 
-In Halide, you write the algorithm once as a pure functional description, and then separately write a *schedule* specifying optimizations such as tiling and parallelism. The schedule does not change the program semantics, only how the compute is performed. This separation is enforced syntactically.
+In Halide, you write the algorithm once as a pure functional description, and then separately write a *schedule* specifying how the program should run. The schedule does not change the program semantics, only the execution strategy. This separation is enforced syntactically.
 
-```
+```cpp
 // algorithm
 f(x) = a(x) * b(x);
 
@@ -40,7 +46,12 @@ f(x) = a(x) * b(x);
 f.parallel(x);
 ```
 
-Why not just achieve (1) with a sufficiently clever compiler? Because determining which details "don't affect correctness" requires deciding program equivalence (in general, [Rice's theorem](https://en.wikipedia.org/wiki/Rice%27s_theorem) forbids this). Scheduling languages today sidestep the problem for a small domain. They don't ask the compiler to discover semantics-preserving transformations, they provide a language for the programmer to express them, while [guaranteeing by construction](https://dl.acm.org/doi/10.1145/3519939.3523446) that only semantics-preserving transformations are expressible.
+The algorithm `f` is a simple element wise multiplication of two dense arrays `a` and `b`, and the schedule specifies that `f` should be run in parallel for all `x`.
 
-There's more to say about scheduling languages (e.g., encapsulation benefits, ergonomic costs), but that's for another post. For now, (1) is the ideal, (3) is the pragmatic alternative when optimal performance is desired.
+Why not just achieve (1) with a sufficiently clever compiler? Because determining which details "don't affect correctness" requires deciding program equivalence (in general, [Rice's theorem](https://en.wikipedia.org/wiki/Rice%27s_theorem) forbids this). Scheduling languages sidestep the problem by narrowing the domain to something tractable. Further, they don't ask the compiler to discover semantics-preserving transformations, they provide a language for the programmer to express them, while [guaranteeing](https://dl.acm.org/doi/10.1145/3519939.3523446) that only semantics-preserving transformations are expressible.
+
+So, why does (3) exist? (1) provides clarity but surrenders performance control, and (2) provides control at the cost of entanglement. Programmers in performance-critical domains want both semantic clarity and performance control. Scheduling languages deliver: reason about correctness in one language, optimize in another. This separation is *one* motivation for scheduling languages; there's more to say (e.g., encapsulation benefits, ergonomic costs), but that's for another post.
+
+
+<p style="font-size:10px"><b>Thank you to AJ Root and Rohan Yadav for their valuable feedback.</b></p>
 
