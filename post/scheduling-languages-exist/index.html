@@ -63,34 +63,39 @@ What Hoare wants and Rice forbids
 <div class="post">
 <p>C.A.R. Hoare’s work <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.5555/63445.C1104369">“Recursive data structures”</a> motivates a simple rule that good language design should abide by:</p>
 <blockquote>
-<p>(1) Implementation details that don’t affect program correctness are syntactically <em>inexpressible</em>.</p>
+<p>(1) Implementation details that don’t affect program correctness should be syntactically <em>inexpressible</em>.</p>
 </blockquote>
-<p>Codd’s <a rel="noopener nofollow noreferrer" target="_blank" href="https://www.seas.upenn.edu/~zives/03f/cis550/codd.pdf">relational model</a> attempts to realize this: you declare <em>what</em> you want (projections, joins) and the implementation (e.g., join order) is determined by the optimizer. In practice, programmers still reason about implementation details, shaping queries to optimize well. Programming languages generally abandon (1) entirely, giving us:</p>
+<p>Codd’s <a rel="noopener nofollow noreferrer" target="_blank" href="https://www.seas.upenn.edu/~zives/03f/cis550/codd.pdf">relational model</a> attempts to realize this: you declare <em>what</em> you want and the implementation is determined by the query optimizer. For example,</p>
+<pre data-lang="sql" style="background-color:#2b303b;color:#c0c5ce;" class="language-sql "><code class="language-sql" data-lang="sql"><span style="color:#b48ead;">SELECT</span><span> age </span><span style="color:#b48ead;">FROM</span><span> users </span><span style="color:#b48ead;">WHERE</span><span> age &gt; </span><span style="color:#d08770;">21
+</span></code></pre>
+<p>The declarative language specifies nothing about index usage, join order, or memory allocation. In practice, relational database programmers still reason about implementation details, shaping queries to optimize well. Most programming languages abandon (1) entirely, giving us:</p>
 <blockquote>
-<p>(2a) Implementation details that don’t affect program correctness are syntactically <em>expressible</em>.</p>
+<p>(2) Implementation details that don’t affect program correctness are syntactically <em>expressible</em>.</p>
 </blockquote>
-<p>C++ is the obvious case, but even <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.5555/645420.652528">Haskell qualifies</a>. You make explicit decisions about memory representation:</p>
-<pre data-lang="haskell" style="background-color:#2b303b;color:#c0c5ce;" class="language-haskell "><code class="language-haskell" data-lang="haskell"><span style="color:#65737e;">-- unboxed (raw machine integer)
-</span><span style="color:#8fa1b3;">foo </span><span style="color:#b48ead;">:: Int</span><span># </span><span style="color:#b48ead;">-&gt; Int</span><span>#
-</span><span>foo x = x +# </span><span style="color:#d08770;">1</span><span>#
-</span><span>
-</span><span style="color:#65737e;">-- boxed (heap-allocated, thunk-able)
+<p>Imperative languages like C are the obvious case, but even <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.5555/645420.652528">Haskell qualifies</a>, where you make explicit decisions about memory representation:</p>
+<pre data-lang="haskell" style="background-color:#2b303b;color:#c0c5ce;" class="language-haskell "><code class="language-haskell" data-lang="haskell"><span style="color:#65737e;">-- boxed (heap-allocated, thunk-able)
 </span><span style="color:#8fa1b3;">foo </span><span style="color:#b48ead;">:: Int -&gt; Int
 </span><span>foo x = x + </span><span style="color:#d08770;">1
+</span><span>
+</span><span style="color:#65737e;">-- unboxed (raw machine integer)
+</span><span style="color:#8fa1b3;">foo </span><span style="color:#b48ead;">:: Int</span><span># </span><span style="color:#b48ead;">-&gt; Int</span><span>#
+</span><span>foo x = x +# </span><span style="color:#d08770;">1</span><span>#
 </span></code></pre>
-<p>These choices are semantically invisible but syntactically required for performance reasons. Scheduling languages like <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/2491956.2462176">Halide</a> and <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/3133901">TACO</a> take a different path:</p>
+<p>Both snippets add <code>1</code> to the variable <code>x</code> with different data layouts. The choices are semantically invisible but syntactically different, and the latter exists solely for performance reasons. Scheduling languages like <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/2491956.2462176">Halide</a> and <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/3133901">TACO</a> take a different path:</p>
 <blockquote>
 <p>(3) Implementation details that don’t affect program correctness are confined to a separate language.</p>
 </blockquote>
-<p>In Halide, you write the algorithm once as a pure functional description, and then separately write a <em>schedule</em> specifying optimizations such as tiling and parallelism. The schedule does not change the program semantics, only how the compute is performed. This separation is enforced syntactically.</p>
-<pre style="background-color:#2b303b;color:#c0c5ce;"><code><span>// algorithm
-</span><span>f(x) = a(x) * b(x);
+<p>In Halide, you write the algorithm once as a pure functional description, and then separately write a <em>schedule</em> specifying how the program should run. The schedule does not change the program semantics, only the execution strategy. This separation is enforced syntactically.</p>
+<pre data-lang="cpp" style="background-color:#2b303b;color:#c0c5ce;" class="language-cpp "><code class="language-cpp" data-lang="cpp"><span style="color:#65737e;">// algorithm
+</span><span style="color:#bf616a;">f</span><span>(x) = </span><span style="color:#bf616a;">a</span><span>(x) * </span><span style="color:#bf616a;">b</span><span>(x);
 </span><span>
-</span><span>// schedule
-</span><span>f.parallel(x);
+</span><span style="color:#65737e;">// schedule
+</span><span>f.</span><span style="color:#bf616a;">parallel</span><span>(x);
 </span></code></pre>
-<p>Why not just achieve (1) with a sufficiently clever compiler? Because determining which details “don’t affect correctness” requires deciding program equivalence (in general, <a rel="noopener nofollow noreferrer" target="_blank" href="https://en.wikipedia.org/wiki/Rice%27s_theorem">Rice’s theorem</a> forbids this). Scheduling languages today sidestep the problem for a small domain. They don’t ask the compiler to discover semantics-preserving transformations, they provide a language for the programmer to express them, while <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/3519939.3523446">guaranteeing by construction</a> that only semantics-preserving transformations are expressible.</p>
-<p>There’s more to say about scheduling languages (e.g., encapsulation benefits, ergonomic costs), but that’s for another post. For now, (1) is the ideal, (3) is the pragmatic alternative when optimal performance is desired.</p>
+<p>The algorithm <code>f</code> is a simple element wise multiplication of two dense arrays <code>a</code> and <code>b</code>, and the schedule specifies that <code>f</code> should be run in parallel for all <code>x</code>.</p>
+<p>Why not just achieve (1) with a sufficiently clever compiler? Because determining which details “don’t affect correctness” requires deciding program equivalence (in general, <a rel="noopener nofollow noreferrer" target="_blank" href="https://en.wikipedia.org/wiki/Rice%27s_theorem">Rice’s theorem</a> forbids this). Scheduling languages sidestep the problem by narrowing the domain to something tractable. Further, they don’t ask the compiler to discover semantics-preserving transformations, they provide a language for the programmer to express them, while <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/3519939.3523446">guaranteeing</a> that only semantics-preserving transformations are expressible.</p>
+<p>So, why does (3) exist? (1) provides clarity but surrenders performance control, and (2) provides control at the cost of entanglement. Programmers in performance-critical domains want both semantic clarity and performance control. Scheduling languages deliver: reason about correctness in one language, optimize in another. This separation is <em>one</em> motivation for scheduling languages; there’s more to say (e.g., encapsulation benefits, ergonomic costs), but that’s for another post.</p>
+<p style="font-size:10px"><b>Thank you to [AJ Root](https://ajroot.pl/) and [Rohan Yadav](https://rohany.github.io/) for their valuable feedback.</b></p>
 
 </div>
 
