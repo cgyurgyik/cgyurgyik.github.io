@@ -81,7 +81,7 @@ What Hoare wants and Rice forbids
 </span><span style="color:#8fa1b3;">foo </span><span style="color:#b48ead;">:: Int</span><span># </span><span style="color:#b48ead;">-&gt; Int</span><span>#
 </span><span>foo x = x +# </span><span style="color:#d08770;">1</span><span>#
 </span></code></pre>
-<p>Both snippets add <code>1</code> to the variable <code>x</code> with different data layouts. The choices are semantically invisible but syntactically different, and the latter exists solely for performance reasons. Scheduling languages like <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/2491956.2462176">Halide</a> and <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/3133901">TACO</a> take a different path:</p>
+<p>Both snippets add <code>1</code> to the variable <code>x</code> with different data layouts. The choices are semantically invisible<sup class="footnote-reference"><a href="#1">1</a></sup> but syntactically different, and the latter exists solely for performance reasons. Scheduling languages like <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/2491956.2462176">Halide</a> and <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/3133901">TACO</a> take a different path:</p>
 <blockquote>
 <p>(3) Implementation details that don’t affect program correctness are confined to a separate language.</p>
 </blockquote>
@@ -95,7 +95,10 @@ What Hoare wants and Rice forbids
 <p>The algorithm <code>f</code> is a simple element wise multiplication of two dense arrays <code>a</code> and <code>b</code>, and the schedule specifies that <code>f</code> should be run in parallel for all <code>x</code>.</p>
 <p>Why not just achieve (1) with a sufficiently clever compiler? Because determining which details “don’t affect correctness” requires deciding program equivalence (in general, <a rel="noopener nofollow noreferrer" target="_blank" href="https://en.wikipedia.org/wiki/Rice%27s_theorem">Rice’s theorem</a> forbids this). Scheduling languages sidestep the problem by narrowing the domain to something tractable. Further, they don’t ask the compiler to discover semantics-preserving transformations, they provide a language for the programmer to express them, while <a rel="noopener nofollow noreferrer" target="_blank" href="https://dl.acm.org/doi/10.1145/3519939.3523446">guaranteeing</a> that only semantics-preserving transformations are expressible.</p>
 <p>So, why does (3) exist? (1) provides clarity but surrenders performance control, and (2) provides control at the cost of entanglement. Programmers in performance-critical domains want both semantic clarity and performance control. Scheduling languages deliver: reason about correctness in one language, optimize in another. This separation is <em>one</em> motivation for scheduling languages; there’s more to say (e.g., encapsulation benefits, ergonomic costs), but that’s for another post.</p>
-<p style="font-size:10px"><b>Thank you to [AJ Root](https://ajroot.pl/) and [Rohan Yadav](https://rohany.github.io/) for their valuable feedback.</b></p>
+<p style="font-size:10px"><b>Thank you to AJ Root and Rohan Yadav for their valuable feedback.</b></p>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>This is not true in general, the domain of unboxed types has no bottom element which just means they cannot be lazily evaluated. However, the point remains.</p>
+</div>
 
 </div>
 
