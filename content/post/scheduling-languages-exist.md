@@ -32,7 +32,7 @@ foo :: Int# -> Int#
 foo x = x +# 1#
 ```
 
-Both snippets add `1` to the variable `x` with different data layouts. The choices are semantically invisible but syntactically different, and the latter exists solely for performance reasons. Scheduling languages like [Halide](https://dl.acm.org/doi/10.1145/2491956.2462176) and [TACO](https://dl.acm.org/doi/10.1145/3133901) take a different path:
+Both snippets add `1` to the variable `x` with different data layouts. The choices are semantically invisible[^1] but syntactically different, and the latter exists solely for performance reasons. Scheduling languages like [Halide](https://dl.acm.org/doi/10.1145/2491956.2462176) and [TACO](https://dl.acm.org/doi/10.1145/3133901) take a different path:
 
 > (3) Implementation details that don't affect program correctness are confined to a separate language.
 
@@ -53,5 +53,7 @@ Why not just achieve (1) with a sufficiently clever compiler? Because determinin
 So, why does (3) exist? (1) provides clarity but surrenders performance control, and (2) provides control at the cost of entanglement. Programmers in performance-critical domains want both semantic clarity and performance control. Scheduling languages deliver: reason about correctness in one language, optimize in another. This separation is *one* motivation for scheduling languages; there's more to say (e.g., encapsulation benefits, ergonomic costs), but that's for another post.
 
 
-<p style="font-size:10px"><b>Thank you to [AJ Root](https://ajroot.pl/) and [Rohan Yadav](https://rohany.github.io/) for their valuable feedback.</b></p>
+<p style="font-size:10px"><b>Thank you to AJ Root and Rohan Yadav for their valuable feedback.</b></p>
 
+
+[^1]: This is not true in general, the domain of unboxed types has no bottom element which just means they cannot be lazily evaluated. However, the point remains.
