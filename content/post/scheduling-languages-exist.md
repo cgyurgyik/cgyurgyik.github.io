@@ -48,12 +48,14 @@ f.parallel(x);
 
 The algorithm `f` is a simple element wise multiplication of two dense arrays `a` and `b`, and the schedule specifies that `f` should be run in parallel for all `x`.
 
-Why not just achieve (1) with a sufficiently clever compiler? Because determining which details "don't affect correctness" requires deciding program equivalence (in general, [Rice's theorem](https://en.wikipedia.org/wiki/Rice%27s_theorem) forbids this). Scheduling languages sidestep the problem by narrowing the domain to something tractable. Further, they don't ask the compiler to discover semantics-preserving transformations, they provide a language for the programmer to express them, while [guaranteeing](https://dl.acm.org/doi/10.1145/3519939.3523446) that only semantics-preserving transformations are expressible.
+Why not just achieve (1) with a sufficiently clever compiler? Because determining which details "don't affect correctness" requires deciding program equivalence (in general, [Rice's theorem](https://en.wikipedia.org/wiki/Rice%27s_theorem) forbids this). Languages abiding to (2) entangle performance control and algorithm semantics, and languages following (3) sidestep the problem by narrowing the domain to something tractable. Further, (3) doesn't require the compiler to discover all semantics-preserving transformations[^2], they provide a language for the programmer to express them, while [guaranteeing](https://dl.acm.org/doi/10.1145/3519939.3523446) that only semantics-preserving transformations are expressible.
 
-So, why does (3) exist? (1) provides clarity but surrenders performance control, and (2) provides control at the cost of entanglement. Programmers in performance-critical domains want both semantic clarity and performance control. Scheduling languages deliver: reason about correctness in one language, optimize in another. This separation is *one* motivation for scheduling languages; there's more to say (e.g., encapsulation benefits, ergonomic costs), but that's for another post.
+So, why does (3) exist? (1) provides clarity but surrenders performance control, and (2) provides control at the cost of entanglement. Programmers in performance-critical domains want both semantic clarity and performance control. Scheduling languages deliver: reason about correctness in one language, optimize in another. This separation is *one* motivation for scheduling languages. There's more to say (e.g., tractable search space, encapsulation benefits, ergonomic costs), but that's for another post.
 
 
 <p style="font-size:10px"><b>Thank you to AJ Root and Rohan Yadav for their valuable feedback.</b></p>
 
 
 [^1]: This is not true in general, the domain of unboxed types has no bottom element which just means they cannot be lazily evaluated. However, the point remains.
+
+[^2]: Generally, scheduling languages also involve a compiler to realize some of the more "trivially" discoverable optimizations, e.g., constant folding or dead code elimination.
