@@ -14,7 +14,7 @@ authors = [
 ]
 
 # Publication name and optional abbreviated version.
-publication = "(to appear in) Proceedings of the ACM on Programming Languages, Volume 10"
+publication = "Programming Language Design and Implementation, Volume 10"
 publication_short = "(to appear) PLDI"
 
 pdf = "/files/pubs/scion-arxiv.pdf"
