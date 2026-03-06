@@ -117,6 +117,10 @@
         <lastmod>2026-03-05</lastmod>
     </url>
     <url>
+        <loc>https://cgyurgyik.github.io/news/scion-bonsai-pldi26-md/</loc>
+        <lastmod>2026-03-05</lastmod>
+    </url>
+    <url>
         <loc>https://cgyurgyik.github.io/news/stanford-first-day/</loc>
         <lastmod>2023-09-17</lastmod>
     </url>
@@ -143,6 +147,14 @@
         <loc>https://cgyurgyik.github.io/publication/</loc>
     </url>
     <url>
+        <loc>https://cgyurgyik.github.io/publication/bonsai-pldi/</loc>
+        <lastmod>2026-03-08</lastmod>
+    </url>
+    <url>
+        <loc>https://cgyurgyik.github.io/publication/burrito-oopsla/</loc>
+        <lastmod>2024-01-01</lastmod>
+    </url>
+    <url>
         <loc>https://cgyurgyik.github.io/publication/calyx-cidr/</loc>
         <lastmod>2023-01-01</lastmod>
     </url>
@@ -151,8 +163,8 @@
         <lastmod>2021-09-22</lastmod>
     </url>
     <url>
-        <loc>https://cgyurgyik.github.io/publication/scion-arxiv/</loc>
-        <lastmod>2025-11-18</lastmod>
+        <loc>https://cgyurgyik.github.io/publication/scion-pldi/</loc>
+        <lastmod>2026-03-08</lastmod>
     </url>
     <url>
         <loc>https://cgyurgyik.github.io/publication/step-yarch/</loc>
