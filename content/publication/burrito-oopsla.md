@@ -17,7 +17,7 @@ authors = [
 ]
 
 # Publication name and optional abbreviated version.
-publication = "Proceedings of the ACM on Programming Languges, Volume 8"
+publication = "Object-Oriented Programming, Systems, Languages, and Applications"
 publication_short = "OOPSLA"
 
 pdf = "/files/pubs/burrito-oopsla.pdf"

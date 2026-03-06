@@ -15,7 +15,7 @@ authors = [
 ]
 
 # Publication name and optional abbreviated version.
-publication = "Conference on Architectural Support for Programming Languages and Operating Systems"
+publication = "Architectural Support for Programming Languages and Operating Systems"
 publication_short = "ASPLOS"
 
 award = "Distinguished Artifact Award"
