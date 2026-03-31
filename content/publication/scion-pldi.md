@@ -1,5 +1,5 @@
 +++
-title = "Data Layout Polymorphism for Bounding Volume Hierarchies"
+title = "Decoupling Data Layouts from Bounding Volume Hierarchies"
 # Add a subtitle here
 # subtitle = ""
 date = 2026-03-08
