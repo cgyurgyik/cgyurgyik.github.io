@@ -17,7 +17,7 @@ authors = [
 publication = "Programming Language Design and Implementation, Volume 10"
 publication_short = "(to appear) PLDI"
 
-pdf = "/files/pubs/scion-arxiv.pdf"
+pdf = "/files/pubs/scion-pldi.pdf"
 urls = [
   { name = "Preprint", url = "https://arxiv.org/abs/2511.15028"}
 ]
