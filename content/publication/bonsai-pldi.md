@@ -21,7 +21,7 @@ authors = [
 publication = "Programming Language Design and Implementation"
 publication_short = "(to appear) PLDI"
 
-pdf = "/files/pubs/bonsai-pldi"
+pdf = "/files/pubs/bonsai-pldi.pdf"
 urls = [
   { name = "Preprint", url = "https://arxiv.org/abs/2511.15000"}
 ]
