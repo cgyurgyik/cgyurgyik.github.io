@@ -1,8 +1,8 @@
 +++
-title = "Compiling Set Queries into Work-Efficient Tree Traversals"
+title = "Bonsai: Compiling Queries to Pruned Tree Traversals"
 # Add a subtitle here
 # subtitle = ""
-date = 2026-03-08
+date = 2026-06-18
 draft = false
 
 [extra]
@@ -19,11 +19,12 @@ authors = [
 
 # Publication name and optional abbreviated version.
 publication = "Programming Language Design and Implementation"
-publication_short = "(to appear) PLDI"
+publication_short = "PLDI"
 
+award = "Distinguished Paper Award"
 pdf = "/files/pubs/bonsai-pldi.pdf"
 urls = [
-  { name = "Preprint", url = "https://arxiv.org/abs/2511.15000"}
+  { name = "Journal", url = "https://doi.org/10.1145/3808256"}
 ]
 type="conf"
 +++
