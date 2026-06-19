@@ -20,7 +20,8 @@ publication_short = "PLDI"
 pdf = "/files/pubs/scion-pldi.pdf"
 urls = [
   { name = "Journal", url = "https://doi.org/10.1145/3808253"},
-  { name = "Slides", url = "https://cgyurgyik.github.io/files/slides/scion-pldi.pdf" }
+  { name = "Slides", url = "https://cgyurgyik.github.io/files/slides/scion-pldi.pdf" },
+  { name = "Video", url = "https://www.youtube.com/live/4ODOGw28s2M?si=KM991dTBuCEOT1Gt&t=2418" }
 ]
 type="conf"
 +++
