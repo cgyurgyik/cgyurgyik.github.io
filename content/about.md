@@ -4,7 +4,7 @@ template = "index.html"
 
 I am a PhD candidate at Stanford University advised by [Fredrik Kjolstad][fkjolstad]. My interests include programming language design and optimization. Specifically, how do we adapt to the *agentic era*, where proofs are "free", optimizations are "free", but token consumption (and its inevitable environmental impact) is not. 
 
-Toward this end, we’ve recently designed [Isomer][], a functional programming language that decouples semantics-preserving rewrites of data layouts from the source program. Because every rewrite preserves semantics, {performance engineers, matrix multiplications (read: agents)} can search over a space of correct implementations without spending {time, tokens} on re-verifying each candidate.
+Toward this end, we’ve recently designed [Isomer][], a functional programming language that decouples optimization of data layouts via rewrite rules from the source program. Because every rewrite preserves semantics, {performance engineers, matrix multiplications (read: agents)} can search over a space of correct implementations without spending {time, tokens} on re-verifying each candidate.
 
 Previously, I've worked on the [Bonsai][] programming language and compiler, [XLA][] (Accelerated Linear Algebra) compiler, [Calyx][] compiler infrastructure, [CIRCT][] compiler for improving hardware design tools, and [LLVM][]. Science is a team effort, and I have been fortunate to learn from and work with *really* good researchers, among them (in no particular order) [Adrian Sampson][asampson] (Cornell), [AJ Root][ajroot] (Stanford), [Clément Pit-Claudel][cpclaudel] (EPFL), and [Rachit Nigam][rnigam] (MIT).
 
