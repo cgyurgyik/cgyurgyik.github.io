@@ -2,14 +2,18 @@
 template = "index.html"
 +++
 
-Christophe Gyurgyik (or simply, Chris) is a PhD candidate at Stanford University advised by [Fred Kjolstad][fkjolstad]. His interests include programming language and compiler design. His current work focuses on developing abstractions that enable the performance engineer (read: computer science expert) to optimize data structures while preserving productivity for the application user (read: non computer science expert). 
+I am a PhD candidate at Stanford University advised by [Fredrik Kjolstad][fkjolstad]. My interests include programming language design and optimization. Specifically, how do we adapt to the *agentic era*, where proofs are "free", optimization is "free", but token consumption (and its inevitable environmental impact) is not. Toward this end, I’ve recently designed [Isomer][], a pure functional programming language.
 
-Previously, he worked at Google on the [XLA][] (Accelerated Linear Algebra) compiler and the [TPU][] (Tensor Processing Unit). Prior to industry, his research centered on [Calyx][], a compiler infrastructure for languages that target hardware accelerators and [CIRCT][], an experimental compiler to improve hardware design tools. This work was completed under Cornell University's [CAPRA][], spearheaded by [Rachit Nigam][rnigam] and [Adrian Sampson][asampson].
+Previously, I worked on [Bonsai][], a language and compiler for accelerating spatial queries; on the [XLA][] (Accelerated Linear Algebra) compiler and co-design of the [TPU][] (Tensor Processing Unit); on [Calyx][], a compiler infrastructure for languages that target hardware accelerators; and on [CIRCT][], an experimental compiler for improving hardware design tools. Science is a team effort, and I have been fortunate to learn from and work with *really* good researchers, among them (in no particular order) [Adrian Sampson][asampson] (Cornell), [AJ Root][ajroot] (Stanford), [Clément Pit-Claudel][cpclaudel] (EPFL), and [Rachit Nigam][rnigam] (MIT).
 
-In his free time, Christophe enjoys [climbing][mountain-project], surfing, and reading.
+In my free time, I enjoy [climbing][mountain-project], surfing, and reading. As for nomenclature, I simply go by *Chris*.
 
+[isomer]: https://github.com/cgyurgyik/isomer/
+[bonsai]: https://github.com/rootjalex/bonsai
 [fkjolstad]: https://fredrikbk.com/
+[ajroot]: https://ajroot.pl/
 [asampson]: https://www.cs.cornell.edu/~asampson/
+[cpclaudel]: https://pit-claudel.fr/clement/
 [calyx]: https://calyxir.org
 [capra]: https://capra.cs.cornell.edu/
 [circt]: https://circt.llvm.org/
