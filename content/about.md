@@ -8,7 +8,7 @@ Toward this end, we’ve recently designed [Isomer][], a functional programming 
 
 Previously, I've worked on the [Bonsai][] programming language and compiler, [XLA][] (Accelerated Linear Algebra) compiler, [Calyx][] compiler infrastructure, [CIRCT][] compiler for improving hardware design tools, and [LLVM][]. Science is a team effort, and I have been fortunate to learn from and work with *really* good researchers, among them (in no particular order) [Adrian Sampson][asampson] (Cornell), [AJ Root][ajroot] (Stanford), [Clément Pit-Claudel][cpclaudel] (EPFL), and [Rachit Nigam][rnigam] (MIT).
 
-In my free time, I enjoy [climbing][mountain-project], surfing, and reading. As for nomenclature, I simply go by *Chris*.
+In my free time, I enjoy [climbing][mountain-project], surfing, and reading. As for nomenclature, I go by *Chris*.
 
 [isomer]: https://github.com/cgyurgyik/isomer/
 [bonsai]: https://github.com/rootjalex/bonsai
