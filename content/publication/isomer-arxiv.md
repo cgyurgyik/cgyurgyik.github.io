@@ -2,7 +2,7 @@
 title = "Decoupling Data Layouts from Algebraic Data Types"
 # Add a subtitle here
 # subtitle = ""
-date = 2027-11-14
+date = 2026-11-14
 draft = false
 
 [extra]
