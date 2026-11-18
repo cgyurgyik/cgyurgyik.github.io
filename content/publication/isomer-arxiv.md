@@ -1,5 +1,5 @@
 +++
-title = "Decoupling Data Layouts from Algebraic Data Types"
+title = "Composable Rewrites for Layouts of Algebraic Data Types"
 # Add a subtitle here
 # subtitle = ""
 date = 2026-11-14
