@@ -32,4 +32,7 @@ author = [
   { name = "Fredrik Kjolstad", link = "https://fredrikbk.com/" },
   { name = "Alexander J Root", link = "https://rootjalex.github.io/" }, 
   { name = "Bobby Yan", link = "https://bobbyy.org/" },
+  { name = "Clément Pit-Claudel", link = "https://pit-claudel.fr/clement/" },
+  { name = "Gabriel Radanne", link = "https://gabriel.radanne.net/" },
+  { name = "Benjamin Driscoll", link = "https://benjamindriscoll.com/" }
 ]
