@@ -17,7 +17,6 @@ authors = [
 publication = "Programming Language Design and Implementation, Volume 10"
 publication_short = "PLDI"
 
-pdf = "/files/pubs/scion-pldi.pdf"
 urls = [
   { name = "Journal", url = "https://doi.org/10.1145/3808253"},
   { name = "Slides", url = "https://cgyurgyik.github.io/files/slides/scion-pldi.pdf" },

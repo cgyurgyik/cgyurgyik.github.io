@@ -22,7 +22,6 @@ publication = "Programming Language Design and Implementation"
 publication_short = "PLDI"
 
 award = "Distinguished Paper Award"
-pdf = "/files/pubs/bonsai-pldi.pdf"
 urls = [
   { name = "Journal", url = "https://doi.org/10.1145/3808256"}
 ]

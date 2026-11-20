@@ -20,7 +20,6 @@ authors = [
 publication = "arXiv"
 publication_short = "arXiv"
 
-pdf = "/files/pubs/isomer-arxiv.pdf"
 urls = [
   { name = "Preprint", url = "https://arxiv.org/abs/2611.19113"}
 ]

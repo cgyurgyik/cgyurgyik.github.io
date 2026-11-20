@@ -23,7 +23,6 @@ authors = [
 publication = "arXiv"
 publication_short = "arXiv"
 
-pdf = "/files/pubs/grove-arxiv.pdf"
 urls = [
   { name = "Preprint", url = "https://arxiv.org/abs/2611.22183"}
 ]

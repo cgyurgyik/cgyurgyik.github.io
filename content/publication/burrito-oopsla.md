@@ -20,7 +20,6 @@ authors = [
 publication = "Object-Oriented Programming, Systems, Languages, and Applications"
 publication_short = "OOPSLA"
 
-pdf = "/files/pubs/burrito-oopsla.pdf"
 urls = [
   { name = "Journal", url = "https://dl.acm.org/doi/10.1145/3689752"}
 ]
